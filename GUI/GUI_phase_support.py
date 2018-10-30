@@ -43,7 +43,7 @@ samples = int()
 def set_Tk_var():
     
     global  contDelim = StringVar(),
-    cont_chunck = StringVar(),
+    contChunck = StringVar(),
     equations[] = [StringVar()for i in range(3)],
     st_de = StringVar(),
     point_num = StringVar(),
@@ -72,7 +72,27 @@ def set_Tk_var():
     
     
 def loadFile_clicked():
-            
+    global w,filename
+    
+    uploadCheck.set("Waiting...")
+    w.loadFileBtn.config(relief=tk.SUNKEN)
+    loadFileThread = threadsHandler.createThread(self,loadFile,"loadFile",True)
+    uploadCheck.set("Done!")
+    
+    # writelast function
+    
+def loadFile():
+    delDecoded=codecs.decode(contDelim.get(), 'unicode_escape')
+    loadData=array(phase_sim.loader(filename.get(),int(contChunck.get()),delDecoded))
+
+
+    if lo_mix.get():
+        loaddata[1:5]=phase_sim.downconvert(loaddata,float(freq_lo.get()))
+    if downsamp.get():
+        loaddata=array(phase_sim.downsampl(loaddata,int(num_down.get())))
+    data_dir_load=1
+    
+    issim=0
 
 
 

@@ -2,7 +2,7 @@
 #-*- coding:UTF-8 -*-
 
 import GUI
-import threading
+import threadingo
 try:
     import queue
 except:

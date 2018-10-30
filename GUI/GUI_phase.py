@@ -451,3 +451,17 @@ class recoveryTab(templateTab, tk.Frame):
         self.phLbl.configure(activebackground="#f9f9f9", text='''Ph''')
         
         
+    def processIncoming(self):
+        # This is the CONSUMER
+        #Handle all messages currently in the queue, if any.
+        while self.sharedQueue.qsize():
+            try:
+                msg = self.sharedQueue.get(0)
+                # Check contents of message and do whatever is needed.
+
+                print(msg)
+            except queue.Empty:
+                # just on general principles, although we don't
+                # expect this branch to be taken in this case
+                pass
+
