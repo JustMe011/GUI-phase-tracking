@@ -1,17 +1,34 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 import sys
-
+import time
 IMG_PATH = "./img/"
 
 class generalGUI(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        
         tk.Tk.wm_title(self, "GUI-phase-tracking")
         
+        self.style = self.__setStyle()
+        
+        ########## Setting Notebook ##########
+        self.top = ttk.Notebook(self)
+        self.top.pack(side="top", fill="both", expand = True)
+        self.top.place(relx=0.0, rely=0.014, relheight=1.0, relwidth=1.0)
+        self.top.configure(width=300, takefocus="")
+         
+         
+        tabs = [loadTab, channelsTab, psdTab, recoveryTab]
+        for tabIndex in range(len(tabs)):
+            tmpTab = tabs[tabIndex](self.top)
+            print(tmpTab.tabName)
+            self.top.add(tmpTab, padding=3)
+            self.top.tab(tabIndex, text=tmpTab.tabName,compound="left",underline="-1")
+        self.top.pack(expand=1, fill="both")
+    
+    def __setStyle(self):
         ########## STYLE ##########
-        self.style = ttk.Style()
+        style = ttk.Style()
         '''This class configures and populates the toplevel window.
         top is the toplevel containing window.'''
         _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
@@ -21,31 +38,16 @@ class generalGUI(tk.Tk):
         _ana2color = '#d9d9d9' # X11 color: 'gray85' 
         font9 = "-family {Bitstream Vera Sans} -size 12 -weight normal"  \
             " -slant roman -underline 0 -overstrike 0"
-        self.style = ttk.Style()
+        style = ttk.Style()
         
         if sys.platform == "win32":
-            self.style.theme_use('winnative')
-        self.style.configure('.',background=_bgcolor)
-        self.style.configure('.',foreground=_fgcolor)
-        self.style.configure('.',font="TkDefaultFont")
-        self.style.map('.',background=
+            style.theme_use('winnative')
+        style.configure('.',background=_bgcolor)
+        style.configure('.',foreground=_fgcolor)
+        style.configure('.',font="TkDefaultFont")
+        style.map('.',background=
             [('selected', _compcolor), ('active',_ana2color)])
-
-        ########## Setting Notebook ##########
-        self.top = ttk.Notebook(self)
-        self.top.pack(side="top", fill="both", expand = True)
-        self.top.place(relx=0.0, rely=0.014, relheight=1.0, relwidth=1.0)
-        self.top.configure(width=300, takefocus="")
-         
-         
-        tabs = {loadTab, secondTab}
-        for Tab in tabs:
-            tmpTab = Tab(self.top)
-            self.top.add(tmpTab, text=tmpTab.tabName, padding=3)
-            
-        self.top.pack(expand=1, fill="both")
-        self.top.update()
-        
+        return style
        
 class templateTab(tk.Frame):
     def __init__(self, parent):
@@ -57,7 +59,7 @@ class templateTab(tk.Frame):
 class loadTab(templateTab, tk.Frame):
     def __init__(self, parent):
         templateTab.__init__(self, parent)
-        self.tabName = "loadTab"
+        self.tabName = "LOAD"
 
         
         self.loadTopFrame = tk.Frame(self)
@@ -249,13 +251,197 @@ class loadTab(templateTab, tk.Frame):
         self.phiPsdBtn.place(relx=0.302, rely=0.882, height=37, width=87)
         self.phiPsdBtn.configure(activebackground="#d9d9d9", text='''PHI PSD''')
         #self.phiPsdBtn.bind('<Button-1>',lambda e:GUI_phase_support.phipsd_pressed(e))
-
-        
-
         
         
-class secondTab(templateTab, tk.Frame):
+class channelsTab(templateTab, tk.Frame):
     def __init__(self, parent, tabName = ""):
         templateTab.__init__(self, parent)
-        self.tabName = "secondTab"
+        self.tabName = "CHANNELS"
+        
+        self.charFirstFrame = tk.Frame(self)
+        self.charFirstFrame.place(relx=0.497, rely=0.117, relheight=0.425, relwidth=0.482)
+        self.charFirstFrame.configure(relief=tk.GROOVE, borderwidth="2", width=650)
+
+        self.charSecondFrame = tk.Frame(self)
+        self.charSecondFrame.place(relx=0.015, rely=0.543, relheight=0.425, relwidth=0.482)
+        self.charSecondFrame.configure(relief=tk.GROOVE, borderwidth="2", width=650)
+
+        self.charThirdFrame = tk.Frame(self)
+        self.charThirdFrame.place(relx=0.497, rely=0.543, relheight=0.425, relwidth=0.482)
+        self.charThirdFrame.configure(relief=tk.GROOVE, borderwidth="2", width=650)
+        
+        self.refreshBtn = tk.Button(self)
+        self.refreshBtn.place(relx=0.096, rely=0.015, height=27, width=82)
+        self.refreshBtn.configure(activebackground="#d9d9d9", text='''REFRESH''')
+        #self.refreshBtn.bind('<Button-1>',lambda e:GUI_phase_support.Refresh_pressed(e))
+        
+        ## loPassFiltLblFrame ##
+        
+        
+        self.loPassFiltLblFrame = tk.LabelFrame(self)
+        self.loPassFiltLbl.place(relx=0.482, rely=0.007, relheight=0.095, relwidth=0.267)
+        self.loPassFiltLbl.configure(relief=tk.GROOVE, text='''Lowpass FIlter''', width=360)
+
+        self.loPassFreqEntry = tk.Entry(self.loPassFiltLblFrame)
+        self.loPassFreqEntry.place(relx=0.306, rely=0.462, height=21, relwidth=0.267
+                , bordermode='ignore')
+        self.loPassFreqEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
+        #self.loPassFreqEntry.configure(textvariable=GUI_phase_support.freq_cut)
+        
+        self.cutFreqLbl = tk.Label(self.loPassFiltLblFrame)
+        self.cutFreqLbl.place(relx=0.056, rely=0.462, height=19, width=57, bordermode='ignore')
+        self.cutFreqLbl.configure(activebackground="#f9f9f9", borderwidth="2", text='''Cut freq.:''')
+        
+        self.applyFiltCkBtn = tk.Checkbutton(self.loPassFiltLblFrame)
+        self.applyFiltCkBtn.place(relx=0.722, rely=0.462, relheight=0.323, relwidth=0.175, bordermode='ignore')
+        self.applyFiltCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='''Apply''')
+        #self.applyCkBtn.configure(variable=GUI_phase_support.applyfilt)
+        
+        self.HzLbl = tk.Label(self.loPassFiltLblFrame)
+        self.HzLbl.place(relx=0.611, rely=0.462, height=21, width=21, bordermode='ignore')
+        self.HzLbl.configure(activebackground="#f9f9f9", borderwidth="2", text='''Hz''')
+ 
+        self.HzLbl2 = tk.Label(self.loPassFiltLblFrame)
+        self.HzLbl2.place(relx=1.222, rely=0.308, height=19, width=19, bordermode='ignore')
+        self.HzLbl2.configure(activebackground="#f9f9f9", borderwidth="2", text='''Hz''')
+
+        ## addWhiteNoiseFrame ##
+        
+        
+        self.addWhiteNoiseFrame = tk.LabelFrame(self)
+        self.addWhiteNoiseFrame.place(relx=0.237, rely=0.007, relheight=0.095, relwidth=0.222)
+        self.addWhiteNoiseFrame.configure(relief=tk.GROOVE, text='''Add white noise''', width=300)
+
+        self.powValEntry = tk.Entry(self.addWhiteNoiseFrame)
+        self.powValEntry.place(relx=0.2, rely=0.462, height=21, relwidth=0.32, bordermode='ignore')
+        self.powValEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
+        #self.powValEntry.configure(textvariable=GUI_phase_support.pow_value)
+        
+        self.psdLbl = tk.Label(self.addWhiteNoiseFrame)
+        self.psdLbl.place(relx=0.033, rely=0.462, height=19, width=36, bordermode='ignore')
+        self.psdLbl.configure(activebackground="#f9f9f9", borderwidth="2", text='''PSD:''')
+        
+        self.NoiseUnitLbl = tk.Label(self.addWhiteNoiseFrame)
+        self.NoiseUnitLbl.place(relx=0.533, rely=0.462, height=19, width=59, bordermode='ignore')
+        self.NoiseUnitLbl.configure(activebackground="#f9f9f9", borderwidth="2", text='''(V^2/Hz)''')
+
+        self.applyWhiteNoise = tk.Checkbutton(self.addWhiteNoiseFrame)
+        self.applyWhiteNoise.place(relx=0.75, rely=0.462, relheight=0.323, relwidth=0.2, bordermode='ignore')
+        self.applyWhiteNoise.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='''Apply''')
+        #self.applyWhiteNoise.configure(variable=GUI_phase_support.applynoise)
+
+        self.samplFreqEntry = tk.Entry(self)
+        self.samplFreqEntry.place(relx=0.126, rely=0.073,height=21, relwidth=0.071)
+        self.samplFreqEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
+        #self.samplFreqEntry.configure(textvariable=GUI_phase_support.freq_samp)        
+
+        self.samplFreqLbl = tk.Label(self)
+        self.samplFreqLbl.place(relx=0.052, rely=0.073, height=19, width=93)
+        self.samplFreqLbl.configure(activebackground="#f9f9f9", borderwidth="2", borderwidth="2")
+
+        self.hzLbl3 = tk.Label(self)
+        self.hzLbl3.place(relx=0.2, rely=0.073, height=19, width=19)
+        self.hzLbl3.configure(activebackground="#f9f9f9", borderwidth="2", text='''Hz''')
+
+                        
+        
+        
+
+
+        
+class psdTab(templateTab, tk.Frame):
+    def __init__(self, parent, tabName = ""):
+        templateTab.__init__(self, parent)
+        self.tabName = "CHs PSD"
+        
+        self.psdFirstFrame = tk.Frame(self)
+        self.psdFirstFrame.place(relx=0.497, rely=0.103, relheight=0.425, relwidth=0.482)
+        self.psdFirstFrame.configure(relief=tk.GROOVE, borderwidth="2", width=650)
+
+        self.psdSecondFrame = tk.Frame(self)
+        self.Frame10.place(relx=0.015, rely=0.528, relheight=0.425, relwidth=0.482)
+        self.Frame10.configure(relief=tk.GROOVE, borderwidth="2", width=650)
+
+        self.psdThirdFrame = tk.Frame(self)
+        self.psdThirdFrame.place(relx=0.497, rely=0.528, relheight=0.425, relwidth=0.482)
+        self.psdThirdFrame.configure(relief=tk.GROOVE, borderwidth="2", width=650)
+
+        self.psdFourthFrame = tk.Frame(self)
+        self.psdFourthFrame.place(relx=0.015, rely=0.103, relheight=0.425, relwidth=0.482)
+        self.psdFourthFrame.configure(relief=tk.GROOVE, borderwidth="2", width=650)
+
+        self.psdRefreshBtn = tk.Button(self)
+        self.psdRefreshBtn.place(relx=0.452, rely=0.015, height=47, width=77)
+        self.psdRefreshBtn.configure(activebackground="#d9d9d9", text='''REFRESH''')
+        #self.psdRefreshBtn.bind('<Button-1>',lambda e:GUI_phase_support.Refresh_PSD(e))
+        
+
+
+
+        
+        
+        
+class recoveryTab(templateTab, tk.Frame):
+    def __init__(self, parent, tabName = ""):
+        templateTab.__init__(self, parent)
+        self.tabName = "RECOVERY"
+        
+        self.recFirstFrame = tk.Frame(self)
+        self.recFirstFrame.place(relx=0.007, rely=0.271, relheight=0.521, relwidth=0.4)
+        self.recFirstFrame.configure(relief=tk.GROOVE, borderwidth="2", width=540)
+
+        self.recSecondFrame = tk.Frame(self)
+        self.recSecondFrame.place(relx=0.423, rely=0.0, relheight=0.535, relwidth=0.437)
+        self.recSecondFrame.configure(relief=tk.GROOVE, borderwidth="2", width=590)
+
+        self.trackBtn = tk.Button(self)
+        self.trackBtn.place(relx=0.044, rely=0.117, height=47, width=97)
+        self.trackBtn.configure(activebackground="#d9d9d9", text='''TRACK''')
+        #self.trackBtn.bind('<Button-1>',lambda e:GUI_phase_support.track_start(e))
+
+        self.checkTrackLbl = tk.Label(self)
+        self.checkTrackLbl.place(relx=0.141, rely=0.132, height=29, width=76)
+        self.checkTrackLbl.configure(activebackground="#f9f9f9", font=font9)
+        #self.checkTrackLbl.configure(textvariable=GUI_phase_support.check_track)
+
+        self.psdBtn = tk.Button(self)
+        self.psdBtn.place(relx=0.319, rely=0.103, height=47, width=87)
+        self.psdBtn.configure(activebackground="#d9d9d9", psdBtn)
+        #self.psdBtn.bind('<Button-1>',lambda e:GUI_phase_support.psd_phi(e))
+
+        self.recThirdFrame = tk.Frame(self)
+        self.recThirdFrame.place(relx=0.46, rely=0.543, relheight=0.433, relwidth=0.371)
+        self.recThirdFrame.configure(relief=tk.GROOVE, borderwidth="2", width=500)
+
+        self.inDeBtn = tk.Entry(self)
+        self.inDeBtn.place(relx=0.259, rely=0.088,height=21, relwidth=0.037)
+        self.inDeBtn.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
+        #self.inDeBtn.configure(textvariable=GUI_phase_support.in_de)
+
+        self.inTeBtn = tk.Entry(self)
+        self.inTeBtn.place(relx=0.259, rely=0.132,height=21, relwidth=0.037)
+        self.inTeBtn.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
+        #self.inTeBtn.configure(textvariable=GUI_phase_support.in_te)
+
+        self.inPhBtn = tk.Entry(self)
+        self.inPhBtn.place(relx=0.259, rely=0.176,height=21, relwidth=0.037)
+        self.inPhBtn.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
+        self.inPhBtn.configure(textvariable=GUI_phase_support.in_ph)
+
+        self.deLbl = tk.Label(self)
+        self.deLbl.place(relx=0.237, rely=0.088, height=19, width=20)
+        self.deLbl.configure(activebackground="#f9f9f9", text='''De''')
+
+        self.startPointLbl = tk.Label(self)
+        self.startPointLbl.place(relx=0.237, rely=0.044, height=19, width=76)
+        self.startPointLbl.configure(activebackground="#f9f9f9", text='''Start point''')
+
+        self.teLbl = tk.Label(self)
+        self.teLbl.place(relx=0.237, rely=0.132, height=19, width=18)
+        self.teLbl.configure(activebackground="#f9f9f9", text='''Te''')
+
+        self.phLbl = tk.Label(self)
+        self.phLbl.place(relx=0.237, rely=0.176, height=21, width=19)
+        self.phLbl.configure(activebackground="#f9f9f9", text='''Ph''')
+        
         
