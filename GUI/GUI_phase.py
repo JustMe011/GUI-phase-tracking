@@ -1,13 +1,20 @@
+#!/usr/bin/env python
+#-*- CODING:UTF-8 -*-
+
 import tkinter as tk
 import tkinter.ttk as ttk
 import sys
-import time
+import GUI_phase_support
+
+
 IMG_PATH = "./img/"
 
 class generalGUI(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         tk.Tk.wm_title(self, "GUI-phase-tracking")
+        
+        
         
         self.style = self.__setStyle()
         
@@ -21,7 +28,6 @@ class generalGUI(tk.Tk):
         tabs = [loadTab, channelsTab, psdTab, recoveryTab]
         for tabIndex in range(len(tabs)):
             tmpTab = tabs[tabIndex](self.top)
-            print(tmpTab.tabName)
             self.top.add(tmpTab, padding=3)
             self.top.tab(tabIndex, text=tmpTab.tabName,compound="left",underline="-1")
         self.top.pack(expand=1, fill="both")
@@ -88,13 +94,13 @@ class loadTab(templateTab, tk.Frame):
         self.delimiterEntry = tk.Entry(self.loadTopFrame)
         self.delimiterEntry.place(relx=0.482, rely=0.609,height=21, relwidth=0.036)
         self.delimiterEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.delimiterEntry.configure(textvariable=GUI_phase_support.cont_delim)
+        #self.delimiterEntry.configure(textvariable=GUI_phase_support.contDelim)
         
         self.loadFileBtn = tk.Button(self.loadTopFrame)
         self.loadFileBtn.place(relx=0.905, rely=0.261, height=34, width=69)
         self.loadBtnImg = tk.PhotoImage(file=IMG_PATH + "upload_button.png")
         self.loadFileBtn.configure(activebackground="#d9d9d9", image=self.loadBtnImg, text='''Button''')
-        #self.loadFileBtn.bind('<Button-1>',lambda e:GUI_phase_support.LoadFile_pressed(e))
+        self.loadFileBtn.bind('<Button-1>',lambda e:GUI_phase_support.LoadFile_pressed(e))
         
         self.chunckLbl = tk.Label(self.loadTopFrame)
         self.chunckLbl.place(relx=0.543, rely=0.609, height=19, width=50)
