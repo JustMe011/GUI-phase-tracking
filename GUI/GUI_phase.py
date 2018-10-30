@@ -5,7 +5,10 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import sys
 import GUI_phase_support
-
+try:
+    import queue
+except:
+    import Queue as queue
 
 IMG_PATH = "./img/"
 
@@ -14,7 +17,7 @@ class generalGUI(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         tk.Tk.wm_title(self, "GUI-phase-tracking")
         
-        
+        self.sharedQueue = queue()
         
         self.style = self.__setStyle()
         
@@ -458,7 +461,7 @@ class recoveryTab(templateTab, tk.Frame):
             try:
                 msg = self.sharedQueue.get(0)
                 # Check contents of message and do whatever is needed.
-
+                
                 print(msg)
             except queue.Empty:
                 # just on general principles, although we don't
