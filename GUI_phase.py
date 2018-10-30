@@ -230,11 +230,7 @@ class PHASE_TRACKING_GUI:
         self.Label2.configure(relief=SUNKEN)
         self.Label2.configure(text='''Load from simulated data''')
 
-        self.Label4 = Label(self.Frame3)
-        self.Label4.place(relx=0.02, rely=0.161, height=21, width=23)
-        self.Label4.configure(activebackground="#f9f9f9")
-        self.Label4.configure(borderwidth="2")
-        self.Label4.configure(text='''DE''')
+        
 
         self.Label5 = Label(self.Frame3)
         self.Label5.place(relx=0.02, rely=0.323, height=21, width=21)
