@@ -279,8 +279,8 @@ class channelsTab(templateTab, tk.Frame):
         
         
         self.loPassFiltLblFrame = tk.LabelFrame(self)
-        self.loPassFiltLbl.place(relx=0.482, rely=0.007, relheight=0.095, relwidth=0.267)
-        self.loPassFiltLbl.configure(relief=tk.GROOVE, text='''Lowpass FIlter''', width=360)
+        self.loPassFiltLblFrame.place(relx=0.482, rely=0.007, relheight=0.095, relwidth=0.267)
+        self.loPassFiltLblFrame.configure(relief=tk.GROOVE, text='''Lowpass FIlter''', width=360)
 
         self.loPassFreqEntry = tk.Entry(self.loPassFiltLblFrame)
         self.loPassFreqEntry.place(relx=0.306, rely=0.462, height=21, relwidth=0.267
@@ -337,7 +337,7 @@ class channelsTab(templateTab, tk.Frame):
 
         self.samplFreqLbl = tk.Label(self)
         self.samplFreqLbl.place(relx=0.052, rely=0.073, height=19, width=93)
-        self.samplFreqLbl.configure(activebackground="#f9f9f9", borderwidth="2", borderwidth="2")
+        self.samplFreqLbl.configure(activebackground="#f9f9f9", borderwidth="2", text='''Sampling freq.:''')
 
         self.hzLbl3 = tk.Label(self)
         self.hzLbl3.place(relx=0.2, rely=0.073, height=19, width=19)
@@ -359,8 +359,8 @@ class psdTab(templateTab, tk.Frame):
         self.psdFirstFrame.configure(relief=tk.GROOVE, borderwidth="2", width=650)
 
         self.psdSecondFrame = tk.Frame(self)
-        self.Frame10.place(relx=0.015, rely=0.528, relheight=0.425, relwidth=0.482)
-        self.Frame10.configure(relief=tk.GROOVE, borderwidth="2", width=650)
+        self.psdSecondFrame.place(relx=0.015, rely=0.528, relheight=0.425, relwidth=0.482)
+        self.psdSecondFrame.configure(relief=tk.GROOVE, borderwidth="2", width=650)
 
         self.psdThirdFrame = tk.Frame(self)
         self.psdThirdFrame.place(relx=0.497, rely=0.528, relheight=0.425, relwidth=0.482)
@@ -401,12 +401,12 @@ class recoveryTab(templateTab, tk.Frame):
 
         self.checkTrackLbl = tk.Label(self)
         self.checkTrackLbl.place(relx=0.141, rely=0.132, height=29, width=76)
-        self.checkTrackLbl.configure(activebackground="#f9f9f9", font=font9)
+        self.checkTrackLbl.configure(activebackground="#f9f9f9")
         #self.checkTrackLbl.configure(textvariable=GUI_phase_support.check_track)
 
         self.psdBtn = tk.Button(self)
         self.psdBtn.place(relx=0.319, rely=0.103, height=47, width=87)
-        self.psdBtn.configure(activebackground="#d9d9d9", psdBtn)
+        self.psdBtn.configure(activebackground="#d9d9d9", text='''PSD''')
         #self.psdBtn.bind('<Button-1>',lambda e:GUI_phase_support.psd_phi(e))
 
         self.recThirdFrame = tk.Frame(self)
@@ -426,7 +426,7 @@ class recoveryTab(templateTab, tk.Frame):
         self.inPhBtn = tk.Entry(self)
         self.inPhBtn.place(relx=0.259, rely=0.176,height=21, relwidth=0.037)
         self.inPhBtn.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        self.inPhBtn.configure(textvariable=GUI_phase_support.in_ph)
+        #self.inPhBtn.configure(textvariable=GUI_phase_support.in_ph)
 
         self.deLbl = tk.Label(self)
         self.deLbl.place(relx=0.237, rely=0.088, height=19, width=20)
