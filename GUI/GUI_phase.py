@@ -4,7 +4,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 import sys
-import GUI_phase_support
+#import GUI_phase_support
 try:
     import queue
 except:
@@ -17,7 +17,7 @@ class generalGUI(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         tk.Tk.wm_title(self, "GUI-phase-tracking")
         
-        self.sharedQueue = queue()
+        self.sharedQueue = queue.Queue()
         
         self.style = self.__setStyle()
         
@@ -62,6 +62,7 @@ class templateTab(tk.Frame):
     def __init__(self, parent):
         self.currentTab = tk.Frame.__init__(self, parent)
         self.tabName = ""
+        self.configure(background="#a8a8a8")
 
 
 
@@ -103,7 +104,7 @@ class loadTab(templateTab, tk.Frame):
         self.loadFileBtn.place(relx=0.905, rely=0.261, height=34, width=69)
         self.loadBtnImg = tk.PhotoImage(file=IMG_PATH + "upload_button.png")
         self.loadFileBtn.configure(activebackground="#d9d9d9", image=self.loadBtnImg, text='''Button''')
-        self.loadFileBtn.bind('<Button-1>',lambda e:GUI_phase_support.LoadFile_pressed(e))
+        #self.loadFileBtn.bind('<Button-1>',lambda e:GUI_phase_support.LoadFile_pressed(e))
         
         self.chunckLbl = tk.Label(self.loadTopFrame)
         self.chunckLbl.place(relx=0.543, rely=0.609, height=19, width=50)
@@ -187,76 +188,76 @@ class loadTab(templateTab, tk.Frame):
         self.insEqFrame.place(relx=0.422, rely=0.129, relheight=0.849, relwidth=0.548)
         self.insEqFrame.configure(relief=tk.GROOVE, borderwidth="2", width=545)
 
-        self.SamplTimeEntry = tk.Entry(self.insEqFrame)
+        self.SamplTimeEntry = tk.Entry(self.loadBottomFrame)
         self.SamplTimeEntry.place(relx=0.281, rely=0.667,height=21, relwidth=0.086)
         self.SamplTimeEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
         #self.SamplTimeEntry.configure(textvariable=GUI_phase_support.st_de)
 
-        self.pointNumLbl = tk.Label(self.insEqFrame)
+        self.pointNumLbl = tk.Label(self.loadBottomFrame)
         self.pointNumLbl.place(relx=0.02, rely=0.667, height=21, width=114)
         self.pointNumLbl.configure(activebackground="#f9f9f9", borderwidth="2", text='''number of points:''')
 
-        self.pointNumEntry = tk.Entry(self.insEqFrame)
+        self.pointNumEntry = tk.Entry(self.loadBottomFrame)
         self.pointNumEntry.place(relx=0.141, rely=0.667, height=21, relwidth=0.076)
         self.pointNumEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
         #self.pointNumEntry.configure(textvariable=GUI_phase_support.point_num)
 
-        self.loadSimBtn = tk.Button(self.insEqFrame)
+        self.loadSimBtn = tk.Button(self.loadBottomFrame)
         self.loadSimBtn.place(relx=0.151, rely=0.763, height=34, width=69)
         self.loadSimBtn.configure(activebackground="#d9d9d9", image=self.loadBtnImg)
         #self.loadSimBtn.bind('<Button-1>',lambda e:GUI_phase_support.LoadSim_pressed(e))
 
-        self.deAddNoiseCkBtn = tk.Checkbutton(self.insEqFrame)
+        self.deAddNoiseCkBtn = tk.Checkbutton(self.loadBottomFrame)
         self.deAddNoiseCkBtn.place(relx=0.02, rely=0.237, relheight=0.045, relwidth=0.124)
         self.deAddNoiseCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='''Add Rand Noise''')
         #self.deAddNoiseCkBtn.configure(variable=GUI_phase_support.ck_rand_de)
 
-        self.teAddNoiseCkBtn = tk.Checkbutton(self.insEqFrame)
+        self.teAddNoiseCkBtn = tk.Checkbutton(self.loadBottomFrame)
         self.teAddNoiseCkBtn.place(relx=0.015, rely=0.387, relheight=0.045, relwidth=0.134)
         self.teAddNoiseCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='''Add Rand Noise''')
         #self.teAddNoiseCkBtn.configure(variable=GUI_phase_support.ck_rand_te)
 
-        self.phAddNoiseCkBtn = tk.Checkbutton(self.insEqFrame)
+        self.phAddNoiseCkBtn = tk.Checkbutton(self.loadBottomFrame)
         self.phAddNoiseCkBtn.place(relx=0.02, rely=0.538, relheight=0.045, relwidth=0.124)
         self.phAddNoiseCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='''Add Rand Noise''')
         #self.phAddNoiseCkBtn.configure(variable=GUI_phase_support.ck_rand_ph)
 
-        self.deNoiseEntry = tk.Entry(self.insEqFrame)
+        self.deNoiseEntry = tk.Entry(self.loadBottomFrame)
         self.deNoiseEntry.place(relx=0.151, rely=0.237,height=21, relwidth=0.147)
         self.deNoiseEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
         #self.deNoiseEntry.configure(textvariable=GUI_phase_support.rand_de)
         
-        self.teNoiseEntry = tk.Entry(self.insEqFrame)
+        self.teNoiseEntry = tk.Entry(self.loadBottomFrame)
         self.teNoiseEntry.place(relx=0.151, rely=0.387,height=21, relwidth=0.147)
         self.teNoiseEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
         #self.teNoiseEntry.configure(textvariable=GUI_phase_support.rand_te)
 
-        self.phNoiseEntry = tk.Entry(self.insEqFrame)
+        self.phNoiseEntry = tk.Entry(self.loadBottomFrame)
         self.phNoiseEntry.place(relx=0.151, rely=0.538,height=21, relwidth=0.147)
         self.phNoiseEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
         #self.phNoiseEntry.configure(textvariable=GUI_phase_support.rand_ph)
 
-        self.freqDeLbl = tk.Label(self.insEqFrame)
+        self.freqDeLbl = tk.Label(self.loadBottomFrame)
         self.freqDeLbl.place(relx=0.302, rely=0.237, height=19, width=104)
         self.freqDeLbl.configure(activebackground="#f9f9f9", text='''(rad^2/Hz)@1Hz''')
 
-        self.freqTeLbl = tk.Label(self.insEqFrame)
+        self.freqTeLbl = tk.Label(self.loadBottomFrame)
         self.freqTeLbl.place(relx=0.302, rely=0.387, height=19, width=104)
         self.freqTeLbl.configure(activebackground="#f9f9f9", text='''(rad^2/Hz)@1Hz''')
 
-        self.freqPhLbl = tk.Label(self.insEqFrame)
+        self.freqPhLbl = tk.Label(self.loadBottomFrame)
         self.freqPhLbl.place(relx=0.302, rely=0.538, height=19, width=104)
         self.freqPhLbl.configure(activebackground="#f9f9f9", text='''(rad^2/Hz)@1Hz''')
 
-        self.timeSampleLbl = tk.Label(self.insEqFrame)
+        self.timeSampleLbl = tk.Label(self.loadBottomFrame)
         self.timeSampleLbl.place(relx=0.236, rely=0.667, height=19, width=44)
         self.timeSampleLbl.configure(activebackground="#f9f9f9", text='''Tsamp''')
 
-        self.secondsLbl = tk.Label(self.insEqFrame)
+        self.secondsLbl = tk.Label(self.loadBottomFrame)
         self.secondsLbl.place(relx=0.377, rely=0.667, height=19, width=18)
         self.secondsLbl.configure(activebackground="#f9f9f9", text='''(s)''')
 
-        self.phiPsdBtn = tk.Button(self.insEqFrame)
+        self.phiPsdBtn = tk.Button(self.loadBottomFrame)
         self.phiPsdBtn.place(relx=0.302, rely=0.882, height=37, width=87)
         self.phiPsdBtn.configure(activebackground="#d9d9d9", text='''PHI PSD''')
         #self.phiPsdBtn.bind('<Button-1>',lambda e:GUI_phase_support.phipsd_pressed(e))
@@ -268,17 +269,23 @@ class channelsTab(templateTab, tk.Frame):
         self.tabName = "CHANNELS"
         
         self.charFirstFrame = tk.Frame(self)
-        self.charFirstFrame.place(relx=0.497, rely=0.117, relheight=0.425, relwidth=0.482)
+        self.charFirstFrame.place(relx=0.015, rely=0.117, relheight=0.425, relwidth=0.482)
         self.charFirstFrame.configure(relief=tk.GROOVE, borderwidth="2", width=650)
 
         self.charSecondFrame = tk.Frame(self)
-        self.charSecondFrame.place(relx=0.015, rely=0.543, relheight=0.425, relwidth=0.482)
+        self.charSecondFrame.place(relx=0.497, rely=0.117, relheight=0.425, relwidth=0.482)
         self.charSecondFrame.configure(relief=tk.GROOVE, borderwidth="2", width=650)
 
         self.charThirdFrame = tk.Frame(self)
-        self.charThirdFrame.place(relx=0.497, rely=0.543, relheight=0.425, relwidth=0.482)
+        self.charThirdFrame.place(relx=0.015, rely=0.543, relheight=0.425, relwidth=0.482)
         self.charThirdFrame.configure(relief=tk.GROOVE, borderwidth="2", width=650)
+
+        self.charFourthFrame = tk.Frame(self)
+        self.charFourthFrame.place(relx=0.497, rely=0.543, relheight=0.425, relwidth=0.482)
+        self.charFourthFrame.configure(relief=tk.GROOVE, borderwidth="2", width=650)
         
+
+
         self.refreshBtn = tk.Button(self)
         self.refreshBtn.place(relx=0.096, rely=0.015, height=27, width=82)
         self.refreshBtn.configure(activebackground="#d9d9d9", text='''REFRESH''')

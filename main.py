@@ -10,7 +10,7 @@ except:
     
 import tkinter as tk
 import threading 
-import threads_handler
+#import threads_handler
 import GUI
 
 
