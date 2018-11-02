@@ -1,17 +1,20 @@
-from threading import Thread, Lock, Condition
-from threadshandler.cfg import condition
+from threading import Thread, Lock
+import threadshandler.cfg as cfg
+from cfg import generalCfg as gCfg
 
-def receiveData():
-    elementToReceive = templateElement
-    while True:
-        condition.acquire()
-        if not sharedQueue:
-            condition.wait()
-            print("empty queue")
-        elementToReceive = sharedQueue.get(0)
-        print("receivedData")
-        [print(elementToReceive[i]) for i in list(elementToReceive.keys())]
-        condition.release()
-        time.sleep(random.random())
+class guiPolling:
+    def __init__(self):
+        self._elToReceive = cfg.templateElement
+
+    def receiveData(self):
+        while True:
+            cfg.condition.acquire()
+            if gCfg.sharedQueue.empty():
+                cfg.condition.wait()
+                print("empty queue")
+            self._elToReceive = gCfg.sharedQueue.get(0)
+            print("receivedData")
+            [print(self._elToReceive[i]) for i in list(self._elToReceive.keys())]
+            cfg.condition.release()
 
 

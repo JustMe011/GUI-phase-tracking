@@ -1,3 +1,4 @@
-from . import threadsHandler
+from . import guiPolling, senderThreads, cfg
+
 
 

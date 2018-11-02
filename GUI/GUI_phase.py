@@ -10,7 +10,8 @@ try:
 except:
     import Queue as queue
 import pathlib
-from cfg import tkCfg
+from threadshandler import guiPolling as gp
+from cfg import tkCfg, generalCfg
 
 IMG_PATH = str(pathlib.Path() / 'img') + "/"
 
@@ -20,7 +21,9 @@ class generalGUI(tk.Tk):
         tk.Tk.wm_title(self, "GUI-phase-tracking")
         from cfg import tkCfg
 
-        self.sharedQueue = queue.Queue()
+        #self.sharedQueue = queue.Queue()
+        self.receiveDataFromQueue = gp.guiPolling().receiveData
+
         self.style = self._setStyle()
         self._tkVarsInit()
 
@@ -83,7 +86,7 @@ class generalGUI(tk.Tk):
         tkCfg.samplingFreq = tk.StringVar()
         tkCfg.applyFilt = tk.IntVar(0)
         tkCfg.powVal = tk.StringVar()
-        tkCfg.applyNoise =
+        tkCfg.applyNoise = tk.IntVar()
         #tkCfg.dataDirLoad =
         #tkCfg.isSim =
         tkCfg.loMix = tk.IntVar(0)
@@ -519,4 +522,3 @@ class recoveryTab(templateTab, tk.Frame):
                 # expect this branch to be taken in this case
                 pass
     '''
-    

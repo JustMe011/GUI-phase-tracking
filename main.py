@@ -23,6 +23,7 @@ def main():
     app = GUI.generalGUI()
     app.geometry("1351x706+-3+-8")
     
+    app.after(100,app.receiveDataFromQueue())
     app.mainloop()
 
 

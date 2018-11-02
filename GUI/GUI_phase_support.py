@@ -19,7 +19,7 @@
 import pathlib
 #from configparser import ConfigParser
 #from numpy import asarray as np_asarray
-#from threadshandler.senderThreads import sender
+from threadshandler.senderThreads import tSender
 import time
 try:
     import tkinter as tk
@@ -53,11 +53,12 @@ def loadFile_clicked():
     tkCfg.uploadCheck.set('Waiting...')
 
     #tkCfg.uploadCheck.set('Done!')
+    ## chiamera' qualcosa del tipo
+    # loadFileT = guiEvents(loadFileCB, "loadFile")
     '''
 
     w.loadFileBtn.config(relief=tk.SUNKEN)
-    #loadFileThread = threadsHandler.createThread(self,loadFile,"loadFile",True)
-    loadFileT = threadedFunctions("loadFile")
+
     uploadCheck.set("Done!")
 
     # writelast function
@@ -65,6 +66,24 @@ def loadFile_clicked():
 
 
 
+class guiEvents(tSender):
+    def __init__(self, funcName, threadName = '', *args):
+        self.threadName = str()
+        # if not threadName:
+        #     self.threadName = funcName.__name__
+        # else:
+        #     self.threadName = threadName
+        self.threadName = funcName.__name__ if not threadName else threadName
+        tSender.__init__(self, self.threadName, funcName)
+
+        self._runFunc()
+
+    def _runFunc(self):
+        returnData = getattr(self, funcName)(args)
+        self.sendData(self, returnData)
 
 
 
+    # def functions...
+    def loadFile():
+        print("loadFile func")
