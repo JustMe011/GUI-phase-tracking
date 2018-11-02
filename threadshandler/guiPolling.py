@@ -1,8 +1,7 @@
 from threading import Thread, Lock, Condition
-
+from threadshandler.cfg import condition
 
 def receiveData():
-    global sharedQueue
     elementToReceive = templateElement
     while True:
         condition.acquire()

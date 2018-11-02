@@ -10,9 +10,7 @@ except:
     
 import tkinter as tk
 import threading 
-#import threads_handler
-import GUI
-
+import GUI.GUI_phase as GUI
 
 try:
     import queue
@@ -21,10 +19,7 @@ except:
 
 def main():
     # Starting default thread -> GUI
-    #masterGui=tk.Tk()
-    #masterGui.geometry("500x500")
 
-    #masterGui.mainloop()
     app = GUI.generalGUI()
     app.geometry("1351x706+-3+-8")
     
