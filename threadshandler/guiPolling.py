@@ -7,14 +7,11 @@ class guiPolling:
         self._elToReceive = cfg.templateElement
 
     def receiveData(self):
-        while True:
+        if not gCfg.sharedQueue.empty():
             cfg.condition.acquire()
-            if gCfg.sharedQueue.empty():
-                cfg.condition.wait()
-                print("empty queue")
             self._elToReceive = gCfg.sharedQueue.get(0)
             print("receivedData")
             [print(self._elToReceive[i]) for i in list(self._elToReceive.keys())]
             cfg.condition.release()
-
-
+        else:
+            print("empty queue")

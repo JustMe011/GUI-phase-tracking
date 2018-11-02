@@ -79,6 +79,7 @@ class generalGUI(tk.Tk):
         tkCfg.opFileName = tk.StringVar()
         tkCfg.uploadCheck = tk.StringVar()
         tkCfg.contChunck = tk.StringVar()
+        tkCfg.contDelim = tk.StringVar()
         tkCfg.equations = [tk.StringVar() for i in range(3)]
         tkCfg.st_de = tk.StringVar()
         tkCfg.pointNum = tk.StringVar()
@@ -143,7 +144,7 @@ class loadTab(templateTab, tk.Frame):
         self.delimiterEntry = tk.Entry(self.loadTopFrame)
         self.delimiterEntry.place(relx=0.482, rely=0.609,height=21, relwidth=0.036)
         self.delimiterEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.delimiterEntry.configure(textvariable=GUI_phase_support.elim)
+        self.delimiterEntry.configure(textvariable=tkCfg.contDelim)
 
         self.loadFileBtn = tk.Button(self.loadTopFrame)
         self.loadFileBtn.place(relx=0.905, rely=0.261, height=34, width=69)
@@ -158,7 +159,7 @@ class loadTab(templateTab, tk.Frame):
         self.chunckEntry = tk.Entry(self.loadTopFrame)
         self.chunckEntry.place(relx=0.603, rely=0.609,height=21, relwidth=0.076)
         self.chunckEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.chunckEntry.configure(textvariable=self.controller.tkSharedVars['contChunck'])
+        self.chunckEntry.configure(textvariable=tkCfg.contChunck)
 
         self.uploadCheckLbl = tk.Label(self.loadTopFrame)
         self.uploadCheckLbl.place(relx=0.915, rely=0.609, height=19, width=60)
@@ -170,12 +171,12 @@ class loadTab(templateTab, tk.Frame):
         self.loMixCkBtn = tk.Checkbutton(self.loadTopFrame)
         self.loMixCkBtn.place(relx=0.754, rely=0.087, relheight=0.183, relwidth=0.068)
         self.loMixCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='''LO mix''')
-        #self.loMixCkBtn.configure(variable=GUI_phase_support.lo_mix)
+        self.loMixCkBtn.configure(variable=tkCfg.loMix)
 
         self.freqLoEntry = tk.Entry(self.loadTopFrame)
         self.freqLoEntry.place(relx=0.709, rely=0.261,height=21, relwidth=0.117)
         self.freqLoEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.freqLoEntry.configure(textvariable=GUI_phase_support.freq_lo)
+        self.freqLoEntry.configure(textvariable=tkCfg.freqLo)
 
         self.hzLbl = tk.Label(self.loadTopFrame)
         self.hzLbl.place(relx=0.834, rely=0.261, height=19, width=19)
@@ -184,12 +185,12 @@ class loadTab(templateTab, tk.Frame):
         self.downSampCkBtn = tk.Checkbutton(self.loadTopFrame)
         self.downSampCkBtn.place(relx=0.754, rely=0.522, relheight=0.183, relwidth=0.093)
         self.downSampCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='''Downsamp''')
-        #self.downSampCkBtn.configure(variable=GUI_phase_support.downsamp)
+        self.downSampCkBtn.configure(variable=tkCfg.downSampling)
 
         self.numDownEntry = tk.Entry(self.loadTopFrame)
         self.numDownEntry.place(relx=0.749, rely=0.739,height=21, relwidth=0.036)
         self.numDownEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.numDownEntry.configure(textvariable=GUI_phase_support.num_down)
+        self.numDownEntry.configure(textvariable=tkCfg.numDown)
 
         self.numLbl = tk.Label(self.loadTopFrame)
         self.numLbl.place(relx=0.794, rely=0.696, height=19, width=32)
@@ -219,17 +220,17 @@ class loadTab(templateTab, tk.Frame):
         self.deEntry = tk.Entry(self.loadBottomFrame)
         self.deEntry.place(relx=0.07, rely=0.172,height=21, relwidth=0.201)
         self.deEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.deEntry.configure(textvariable=GUI_phase_support.eq_de)
+        self.deEntry.configure(textvariable=tkCfg.equations[0])
 
         self.teEntry = tk.Entry(self.loadBottomFrame)
         self.teEntry.place(relx=0.07, rely=0.323,height=21, relwidth=0.201)
         self.teEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.teEntry.configure(textvariable=GUI_phase_support.eq_te)
+        self.teEntry.configure(textvariable=tkCfg.equations[1])
 
         self.phEntry = tk.Entry(self.loadBottomFrame)
         self.phEntry.place(relx=0.07, rely=0.473,height=21, relwidth=0.201)
         self.phEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.phEntry.configure(textvariable=GUI_phase_support.eq_ph)
+        self.phEntry.configure(textvariable=tkCfg.equations[2])
 
         self.insEqFrame = tk.Frame(self.loadBottomFrame)
         self.insEqFrame.place(relx=0.422, rely=0.129, relheight=0.849, relwidth=0.548)
@@ -238,7 +239,7 @@ class loadTab(templateTab, tk.Frame):
         self.SamplTimeEntry = tk.Entry(self.loadBottomFrame)
         self.SamplTimeEntry.place(relx=0.281, rely=0.667,height=21, relwidth=0.086)
         self.SamplTimeEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.SamplTimeEntry.configure(textvariable=GUI_phase_support.st_de)
+        self.SamplTimeEntry.configure(textvariable=tkCfg.st_de)
 
         self.pointNumLbl = tk.Label(self.loadBottomFrame)
         self.pointNumLbl.place(relx=0.02, rely=0.667, height=21, width=114)
@@ -247,7 +248,7 @@ class loadTab(templateTab, tk.Frame):
         self.pointNumEntry = tk.Entry(self.loadBottomFrame)
         self.pointNumEntry.place(relx=0.141, rely=0.667, height=21, relwidth=0.076)
         self.pointNumEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.pointNumEntry.configure(textvariable=GUI_phase_support.point_num)
+        self.pointNumEntry.configure(textvariable=tkCfg.pointNum)
 
         self.loadSimBtn = tk.Button(self.loadBottomFrame)
         self.loadSimBtn.place(relx=0.151, rely=0.763, height=34, width=69)
@@ -257,32 +258,32 @@ class loadTab(templateTab, tk.Frame):
         self.deAddNoiseCkBtn = tk.Checkbutton(self.loadBottomFrame)
         self.deAddNoiseCkBtn.place(relx=0.02, rely=0.237, relheight=0.045, relwidth=0.124)
         self.deAddNoiseCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='''Add Rand Noise''')
-        #self.deAddNoiseCkBtn.configure(variable=GUI_phase_support.ck_rand_de)
+        self.deAddNoiseCkBtn.configure(variable=tkCfg.ckRands[0])
 
         self.teAddNoiseCkBtn = tk.Checkbutton(self.loadBottomFrame)
         self.teAddNoiseCkBtn.place(relx=0.015, rely=0.387, relheight=0.045, relwidth=0.134)
         self.teAddNoiseCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='''Add Rand Noise''')
-        #self.teAddNoiseCkBtn.configure(variable=GUI_phase_support.ck_rand_te)
+        self.teAddNoiseCkBtn.configure(variable=tkCfg.ckRands[0])
 
         self.phAddNoiseCkBtn = tk.Checkbutton(self.loadBottomFrame)
         self.phAddNoiseCkBtn.place(relx=0.02, rely=0.538, relheight=0.045, relwidth=0.124)
         self.phAddNoiseCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='''Add Rand Noise''')
-        #self.phAddNoiseCkBtn.configure(variable=GUI_phase_support.ck_rand_ph)
+        self.phAddNoiseCkBtn.configure(variable=tkCfg.ckRands[0])
 
         self.deNoiseEntry = tk.Entry(self.loadBottomFrame)
         self.deNoiseEntry.place(relx=0.151, rely=0.237,height=21, relwidth=0.147)
         self.deNoiseEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.deNoiseEntry.configure(textvariable=GUI_phase_support.rand_de)
+        self.deNoiseEntry.configure(textvariable=tkCfg.rands[0])
 
         self.teNoiseEntry = tk.Entry(self.loadBottomFrame)
         self.teNoiseEntry.place(relx=0.151, rely=0.387,height=21, relwidth=0.147)
         self.teNoiseEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.teNoiseEntry.configure(textvariable=GUI_phase_support.rand_te)
+        self.teNoiseEntry.configure(textvariable=tkCfg.rands[1])
 
         self.phNoiseEntry = tk.Entry(self.loadBottomFrame)
         self.phNoiseEntry.place(relx=0.151, rely=0.538,height=21, relwidth=0.147)
         self.phNoiseEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.phNoiseEntry.configure(textvariable=GUI_phase_support.rand_ph)
+        self.phNoiseEntry.configure(textvariable=tkCfg.rands[2])
 
         self.freqDeLbl = tk.Label(self.loadBottomFrame)
         self.freqDeLbl.place(relx=0.302, rely=0.237, height=19, width=104)
@@ -349,7 +350,7 @@ class channelsTab(templateTab, tk.Frame):
         self.loPassFreqEntry.place(relx=0.306, rely=0.462, height=21, relwidth=0.267
                 , bordermode='ignore')
         self.loPassFreqEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.loPassFreqEntry.configure(textvariable=GUI_phase_support.freq_cut)
+        self.loPassFreqEntry.configure(textvariable=tkCfg.cutOffFreq)
 
         self.cutFreqLbl = tk.Label(self.loPassFiltLblFrame)
         self.cutFreqLbl.place(relx=0.056, rely=0.462, height=19, width=57, bordermode='ignore')
@@ -358,7 +359,7 @@ class channelsTab(templateTab, tk.Frame):
         self.applyFiltCkBtn = tk.Checkbutton(self.loPassFiltLblFrame)
         self.applyFiltCkBtn.place(relx=0.722, rely=0.462, relheight=0.323, relwidth=0.175, bordermode='ignore')
         self.applyFiltCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='''Apply''')
-        #self.applyCkBtn.configure(variable=GUI_phase_support.applyfilt)
+        self.applyFiltCkBtn.configure(variable=tkCfg.applyFilt)
 
         self.HzLbl = tk.Label(self.loPassFiltLblFrame)
         self.HzLbl.place(relx=0.611, rely=0.462, height=21, width=21, bordermode='ignore')
@@ -378,7 +379,7 @@ class channelsTab(templateTab, tk.Frame):
         self.powValEntry = tk.Entry(self.addWhiteNoiseFrame)
         self.powValEntry.place(relx=0.2, rely=0.462, height=21, relwidth=0.32, bordermode='ignore')
         self.powValEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.powValEntry.configure(textvariable=GUI_phase_support.pow_value)
+        self.powValEntry.configure(textvariable=tkCfg.powVal)
 
         self.psdLbl = tk.Label(self.addWhiteNoiseFrame)
         self.psdLbl.place(relx=0.033, rely=0.462, height=19, width=36, bordermode='ignore')
@@ -391,12 +392,12 @@ class channelsTab(templateTab, tk.Frame):
         self.applyWhiteNoise = tk.Checkbutton(self.addWhiteNoiseFrame)
         self.applyWhiteNoise.place(relx=0.75, rely=0.462, relheight=0.323, relwidth=0.2, bordermode='ignore')
         self.applyWhiteNoise.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='''Apply''')
-        #self.applyWhiteNoise.configure(variable=GUI_phase_support.applynoise)
+        self.applyWhiteNoise.configure(variable=tkCfg.applyNoise)
 
         self.samplFreqEntry = tk.Entry(self)
         self.samplFreqEntry.place(relx=0.126, rely=0.073,height=21, relwidth=0.071)
         self.samplFreqEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.samplFreqEntry.configure(textvariable=GUI_phase_support.freq_samp)
+        self.samplFreqEntry.configure(textvariable=tkCfg.samplingFreq)
 
         self.samplFreqLbl = tk.Label(self)
         self.samplFreqLbl.place(relx=0.052, rely=0.073, height=19, width=93)
@@ -465,7 +466,7 @@ class recoveryTab(templateTab, tk.Frame):
         self.checkTrackLbl = tk.Label(self)
         self.checkTrackLbl.place(relx=0.141, rely=0.132, height=29, width=76)
         self.checkTrackLbl.configure(activebackground="#f9f9f9")
-        #self.checkTrackLbl.configure(textvariable=GUI_phase_support.check_track)
+        self.checkTrackLbl.configure(textvariable=tkCfg.checkTrack)
 
         self.psdBtn = tk.Button(self)
         self.psdBtn.place(relx=0.319, rely=0.103, height=47, width=87)
@@ -479,17 +480,17 @@ class recoveryTab(templateTab, tk.Frame):
         self.inDeBtn = tk.Entry(self)
         self.inDeBtn.place(relx=0.259, rely=0.088,height=21, relwidth=0.037)
         self.inDeBtn.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.inDeBtn.configure(textvariable=GUI_phase_support.in_de)
+        self.inDeBtn.configure(textvariable=tkCfg.ins[0])
 
         self.inTeBtn = tk.Entry(self)
         self.inTeBtn.place(relx=0.259, rely=0.132,height=21, relwidth=0.037)
         self.inTeBtn.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.inTeBtn.configure(textvariable=GUI_phase_support.in_te)
+        self.inTeBtn.configure(textvariable=tkCfg.ins[1])
 
         self.inPhBtn = tk.Entry(self)
         self.inPhBtn.place(relx=0.259, rely=0.176,height=21, relwidth=0.037)
         self.inPhBtn.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        #self.inPhBtn.configure(textvariable=GUI_phase_support.in_ph)
+        self.inPhBtn.configure(textvariable=tkCfg.ins[2])
 
         self.deLbl = tk.Label(self)
         self.deLbl.place(relx=0.237, rely=0.088, height=19, width=20)
@@ -507,18 +508,3 @@ class recoveryTab(templateTab, tk.Frame):
         self.phLbl.place(relx=0.237, rely=0.176, height=21, width=19)
         self.phLbl.configure(activebackground="#f9f9f9", text='''Ph''')
 
-    '''
-    def processIncoming(self):
-        # This is the CONSUMER
-        #Handle all messages currently in the queue, if any.
-        while self.sharedQueue.qsize():
-            try:
-                msg = self.sharedQueue.get(0)
-                # Check contents of message and do whatever is needed.
-
-                print(msg)
-            except queue.Empty:
-                # just on general principles, although we don't
-                # expect this branch to be taken in this case
-                pass
-    '''

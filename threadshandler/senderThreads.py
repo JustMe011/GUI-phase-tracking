@@ -6,6 +6,7 @@ from cfg import generalCfg as gCfg
 class tSender (Thread):
     def __init__(self, threadName):
         Thread.__init__(self)
+        print('asd')
         self._args = str()
         self._threadName = threadName
         self._elementToSend = tCfg.templateElement
@@ -17,17 +18,14 @@ class tSender (Thread):
     #     self.sendData(returnData)
 
 
-    def sendData(self,listOfElements):
-
-        # devo riempire elementToSend
-        self._listToSend(listOfElements)
-
+    def sendData(self,*tupleToSend):
+        tuple(listToSend)
+        self.elementToSend['Value'] = tupleToSend
 
         tkCfg.condition.acquire()
         gCfg.sharedQueue.put(self.elementToSend)
         tCfg.condition.notify()
         tCfg.condition.release()
 
-    def _listToSend(self,listOfElements):
-        self.elementToSend['Value'] = listOfElements
+
 

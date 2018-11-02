@@ -2,6 +2,7 @@
 opFileName = None
 uploadCheck = None
 contChunck = None
+contDelim = None
 equations = None
 st_de = None
 pointNum = None

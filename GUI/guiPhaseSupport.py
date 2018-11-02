@@ -11,8 +11,8 @@
 #from matplotlib.pyplot import figure
 #import phase_sim
 #from parser_sim import parse_function, parse_x
-#import numpy as npy
-#import codecs
+import numpy as npy
+import codecs
 #import copy
 #import PSD
 #import datagenerator
@@ -33,8 +33,8 @@ except:
 #from tkinter import messagebox
 #import threading
 from cfg import tkCfg
-
-
+from threadshandler.cfg import condition
+import time
 
 # Config files:
 #CONFIG_PATH = pathlib.Path.cwd() / 'configFiles'
@@ -52,6 +52,7 @@ def loadFile_clicked():
     print("loadFile clicked")
     tkCfg.uploadCheck.set('Waiting...')
 
+    loadFileT = guiEvents('loadFile')
     #tkCfg.uploadCheck.set('Done!')
     ## chiamera' qualcosa del tipo
     # loadFileT = guiEvents(loadFileCB, "loadFile")
@@ -69,21 +70,30 @@ def loadFile_clicked():
 class guiEvents(tSender):
     def __init__(self, funcName, threadName = '', *args):
         self.threadName = str()
+        self.funcName = funcName
+        self.funcArgs = args
         # if not threadName:
         #     self.threadName = funcName.__name__
         # else:
         #     self.threadName = threadName
-        self.threadName = funcName.__name__ if not threadName else threadName
-        tSender.__init__(self, self.threadName, funcName)
+        self.threadName = funcName if not threadName else threadName
+        print('threadName: {}\nfuncName: {}\n'.format(self.threadName, self.funcName))
+        tSender.__init__(self, self.threadName)
 
         self._runFunc()
 
     def _runFunc(self):
-        returnData = getattr(self, funcName)(args)
-        self.sendData(self, returnData)
+        returnData = getattr(self, self.funcName)(self.funcArgs)
+        if 'NoneType' == type(returnData):
+            returnData = tuple()
+        print('returnData: {}'.format(returnData))
+        #self.sendData(self, returnData)
 
 
 
     # def functions...
-    def loadFile():
+    def loadFile(self , *args):
         print("loadFile func")
+
+        delDecoded = codecs.decode(tkCfg.contDelim.get(), 'unicode_escape')
+        loadedData = npy.array(phase_sim.loader(filename.get(),int(cont_chunck.get()),del_decoded))
