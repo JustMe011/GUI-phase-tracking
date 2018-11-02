@@ -9,7 +9,7 @@
 #from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk
 #from matplotlib.figure import Figure
 #from matplotlib.pyplot import figure
-#import phase_sim
+import phaseSimulation as phSim
 #from parser_sim import parse_function, parse_x
 import numpy as npy
 import codecs
@@ -51,19 +51,8 @@ import time
 def loadFile_clicked():
     print("loadFile clicked")
     tkCfg.uploadCheck.set('Waiting...')
-
     loadFileT = guiEvents('loadFile')
-    #tkCfg.uploadCheck.set('Done!')
-    ## chiamera' qualcosa del tipo
-    # loadFileT = guiEvents(loadFileCB, "loadFile")
-    '''
-
-    w.loadFileBtn.config(relief=tk.SUNKEN)
-
-    uploadCheck.set("Done!")
-
-    # writelast function
-    '''
+    tkCfg.uploadCheck.set('Done!')
 
 
 
@@ -95,5 +84,13 @@ class guiEvents(tSender):
     def loadFile(self , *args):
         print("loadFile func")
 
-        delDecoded = codecs.decode(tkCfg.contDelim.get(), 'unicode_escape')
-        loadedData = npy.array(phase_sim.loader(filename.get(),int(cont_chunck.get()),del_decoded))
+        delDecoded = codecs.decode(tkCfg.contDelim.get(), 'unicode_escape') # decoded delimiter sign
+        loadedData = npy.array(phSim.loader(tkCfg.opFileName.get(),int(tkCfg.contChunck.get()),delDecoded))
+
+        if tkCfg.loMix.get():
+        loadedData[1:5]=phSim.downconvert(loadedData,float(tkCfg.freqLo.get()))
+        if tkCfg.downSampling.get():
+            loadedData=npy.array(phSim.downsampl(loadedData,int(tkCfg.numDown.get())))
+        tkCfg.dataDirLoad = 1
+        tkCfg.isSim = 0
+        return loadedData, tkCfg.dataDirLoad, tkCfg.isSim
