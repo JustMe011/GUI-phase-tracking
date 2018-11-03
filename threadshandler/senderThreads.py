@@ -4,19 +4,23 @@ from cfg import generalCfg as gCfg
 
 
 class tSender (Thread):
-    def __init__(self, threadName):
-        Thread.__init__(self)
-        print('asd')
-        self._args = str()
-        self._threadName = threadName
+    def __init__(self, name=None, target=None):
+        self.threadName = str()
+        self.threadName = name
+        super(tSender, self).__init__(name=self.threadName, target=target)
+        #self.funcArgs = funcArgs
+
         self._elementToSend = tCfg.templateElement
-        self._elementToSend['threadName'] = threadName
+        self._elementToSend['threadName'] = self.threadName
+        self.func = target
+        return
 
+     # Run override -> I could comment this func and pass the function as target in kwargs
+    # to the thread.__init__()
 
-    # def run(self):
-    #     returnData = self.funcs[self.threadName](self.args)
-    #     self.sendData(returnData)
-
+    def run(self):
+        self.func()
+        return
 
     def sendData(self,*tupleToSend):
         tuple(listToSend)
@@ -26,6 +30,6 @@ class tSender (Thread):
         gCfg.sharedQueue.put(self.elementToSend)
         tCfg.condition.notify()
         tCfg.condition.release()
-
+        return
 
 

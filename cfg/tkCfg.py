@@ -1,5 +1,6 @@
 # Shared variables
 opFileName = None
+loadFileEntry = None
 uploadCheck = None
 contChunck = None
 contDelim = None

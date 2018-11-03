@@ -4,7 +4,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 import sys
-import GUI.GUI_phase_support as GUI_phase_support
+import GUI.guiPhaseSupport as guiPhaseSupport
 try:
     import queue
 except:
@@ -12,6 +12,7 @@ except:
 import pathlib
 from threadshandler import guiPolling as gp
 from cfg import tkCfg, generalCfg
+from matplotlib.figure import Figure
 
 IMG_PATH = str(pathlib.Path() / 'img') + "/"
 
@@ -34,18 +35,48 @@ class generalGUI(tk.Tk):
         self.top.configure(width=300, takefocus="")
 
 
-        self.tabs = [loadTab, channelsTab, psdTab, recoveryTab]
+        self.tabs = {'loadTab':loadTab, 'channelsTab':channelsTab, 'psdTab':psdTab, 'recoveryTab':recoveryTab}
         # For further uses
         # With getTabs() functions I can accesses from different tabs to each others
         self.tabsRefs = dict()
 
-        for tabIndex in range(len(self.tabs)):
-            tmpTab = self.tabs[tabIndex](self.top, self)
+        for tabIndex in range(len(self.tabs.values())):
+            tabs = list(self.tabs.values())
+            tmpTab = tabs[tabIndex](self.top, self)
             #self.tabs[tabIndex] = tmpTab
-            self.tabsRefs[self.tabs[tabIndex]] = tmpTab
+            self.tabsRefs[tabs[tabIndex]] = tmpTab
             self.top.add(tmpTab, padding=3)
             self.top.tab(tabIndex, text=tmpTab.tabName,compound="left",underline="-1")
         self.top.pack(expand=1, fill="both")
+
+    def changeProperty(self, element, **propToChange):
+        # **propToChange reresent a dictionary containing the property
+        #    to change
+        retVal = None
+        # I've to find in which tab is situated the element
+        selectedEl = self._findInTabs(element)
+        if selectedEl:
+            selectedEl.configure(propToChange)
+            retVal = True
+        else:
+            print("Error, unknown property or element")
+        return retVal
+
+
+    def _findInTabs (self, element):
+        # element as str
+        matching = False
+        foundTab = None
+        for tab in self.tabsRefs:
+            if element in tab.__dict__
+                foundTab = tab
+
+        retVal = None
+        if foundTab:
+            retVal = foundTab.__dict__[element]
+        # it returns the element
+        return retVal
+
 
     def _setStyle(self):
         ########## STYLE ##########
@@ -77,6 +108,7 @@ class generalGUI(tk.Tk):
 
     def _tkVarsInit(self):
         tkCfg.opFileName = tk.StringVar()
+        tkCfg.loadFileEntry = tk.StringVar()
         tkCfg.uploadCheck = tk.StringVar()
         tkCfg.contChunck = tk.StringVar()
         tkCfg.contDelim = tk.StringVar()
@@ -131,11 +163,12 @@ class loadTab(templateTab, tk.Frame):
         self.loadSearchBtn = tk.Button(self.loadTopFrame)
         self.loadSearchBtn.place(relx=0.03, rely=0.609, height=27, width=68)
         self.loadSearchBtn.configure(activebackground="#d9d9d9", text='''Search''')
-        #self.loadSearchBtn.bind('<Button-1>',lambda e:GUI_phase_support.Search_pressed(e))
+        self.loadSearchBtn.bind('<Button-1>',lambda e:guiPhaseSupport.loadSearch_clicked())
 
-        self.loadFromFileTxt = tk.Text(self.loadTopFrame)
-        self.loadFromFileTxt.place(relx=0.121, rely=0.609, relheight=0.226, relwidth=0.257)
-        self.loadFromFileTxt.configure(font="TkTextFont", selectbackground="#c4c4c4", width=256, wrap=tk.WORD)
+        self.loadFromFileEntry = tk.Entry(self.loadTopFrame)
+        self.loadFromFileEntry.place(relx=0.121, rely=0.609, relheight=0.226, relwidth=0.257)
+        self.loadFromFileEntry.configure(font="TkTextFont", selectbackground="#c4c4c4", width=256)
+        self.loadFromFileEntry.configure(textvariable=tkCfg.loadFileEntry)
 
         self.delimiterLlb = tk.Label(self.loadTopFrame)
         self.delimiterLlb.place(relx=0.402, rely=0.609, height=21, width=76)
@@ -150,7 +183,7 @@ class loadTab(templateTab, tk.Frame):
         self.loadFileBtn.place(relx=0.905, rely=0.261, height=34, width=69)
         self.loadBtnImg = tk.PhotoImage(file=IMG_PATH + "upload_button.png")
         self.loadFileBtn.configure(activebackground="#d9d9d9", image=self.loadBtnImg, text='''Button''')
-        self.loadFileBtn.bind('<Button-1>',lambda e:GUI_phase_support.loadFile_clicked())
+        self.loadFileBtn.bind('<Button-1>',lambda e:guiPhaseSupport.loadFile_clicked())
 
         self.chunckLbl = tk.Label(self.loadTopFrame)
         self.chunckLbl.place(relx=0.543, rely=0.609, height=19, width=36)
@@ -253,7 +286,7 @@ class loadTab(templateTab, tk.Frame):
         self.loadSimBtn = tk.Button(self.loadBottomFrame)
         self.loadSimBtn.place(relx=0.151, rely=0.763, height=34, width=69)
         self.loadSimBtn.configure(activebackground="#d9d9d9", image=self.loadBtnImg)
-        #self.loadSimBtn.bind('<Button-1>',lambda e:GUI_phase_support.LoadSim_pressed(e))
+        #self.loadSimBtn.bind('<Button-1>',lambda e:guiPhaseSupport.LoadSim_pressed(e))
 
         self.deAddNoiseCkBtn = tk.Checkbutton(self.loadBottomFrame)
         self.deAddNoiseCkBtn.place(relx=0.02, rely=0.237, relheight=0.045, relwidth=0.124)
@@ -308,7 +341,7 @@ class loadTab(templateTab, tk.Frame):
         self.phiPsdBtn = tk.Button(self.loadBottomFrame)
         self.phiPsdBtn.place(relx=0.302, rely=0.882, height=37, width=87)
         self.phiPsdBtn.configure(activebackground="#d9d9d9", text='''PHI PSD''')
-        #self.phiPsdBtn.bind('<Button-1>',lambda e:GUI_phase_support.phipsd_pressed(e))
+        #self.phiPsdBtn.bind('<Button-1>',lambda e:guiPhaseSupport.phipsd_pressed(e))
 
 
 class channelsTab(templateTab, tk.Frame):
@@ -337,7 +370,7 @@ class channelsTab(templateTab, tk.Frame):
         self.refreshBtn = tk.Button(self)
         self.refreshBtn.place(relx=0.096, rely=0.015, height=27, width=82)
         self.refreshBtn.configure(activebackground="#d9d9d9", text='''REFRESH''')
-        #self.refreshBtn.bind('<Button-1>',lambda e:GUI_phase_support.Refresh_pressed(e))
+        #self.refreshBtn.bind('<Button-1>',lambda e:guiPhaseSupport.Refresh_pressed(e))
 
         ## loPassFiltLblFrame ##
 
@@ -437,7 +470,7 @@ class psdTab(templateTab, tk.Frame):
         self.psdRefreshBtn = tk.Button(self)
         self.psdRefreshBtn.place(relx=0.452, rely=0.015, height=47, width=77)
         self.psdRefreshBtn.configure(activebackground="#d9d9d9", text='''REFRESH''')
-        #self.psdRefreshBtn.bind('<Button-1>',lambda e:GUI_phase_support.Refresh_PSD(e))
+        #self.psdRefreshBtn.bind('<Button-1>',lambda e:guiPhaseSupport.Refresh_PSD(e))
 
 
 
@@ -461,7 +494,7 @@ class recoveryTab(templateTab, tk.Frame):
         self.trackBtn = tk.Button(self)
         self.trackBtn.place(relx=0.044, rely=0.117, height=47, width=97)
         self.trackBtn.configure(activebackground="#d9d9d9", text='''TRACK''')
-        #self.trackBtn.bind('<Button-1>',lambda e:GUI_phase_support.track_start(e))
+        #self.trackBtn.bind('<Button-1>',lambda e:guiPhaseSupport.track_start(e))
 
         self.checkTrackLbl = tk.Label(self)
         self.checkTrackLbl.place(relx=0.141, rely=0.132, height=29, width=76)
@@ -471,7 +504,7 @@ class recoveryTab(templateTab, tk.Frame):
         self.psdBtn = tk.Button(self)
         self.psdBtn.place(relx=0.319, rely=0.103, height=47, width=87)
         self.psdBtn.configure(activebackground="#d9d9d9", text='''PSD''')
-        #self.psdBtn.bind('<Button-1>',lambda e:GUI_phase_support.psd_phi(e))
+        #self.psdBtn.bind('<Button-1>',lambda e:guiPhaseSupport.psd_phi(e))
 
         self.recThirdFrame = tk.Frame(self)
         self.recThirdFrame.place(relx=0.46, rely=0.543, relheight=0.433, relwidth=0.371)
@@ -508,3 +541,7 @@ class recoveryTab(templateTab, tk.Frame):
         self.phLbl.place(relx=0.237, rely=0.176, height=21, width=19)
         self.phLbl.configure(activebackground="#f9f9f9", text='''Ph''')
 
+# class plotsDraw(Figure):
+#     def __init__(self, *args, *kwargs):
+#         Figure.__init__(self, *args, *kwargs)
+        

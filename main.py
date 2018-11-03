@@ -9,8 +9,7 @@ except:
     exit(1)
     
 import tkinter as tk
-import threading 
-import GUI.GUI_phase as GUI
+import GUI.guiPhase as GUI
 
 try:
     import queue
