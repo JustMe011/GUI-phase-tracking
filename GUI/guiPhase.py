@@ -38,13 +38,13 @@ class generalGUI(tk.Tk):
         self.tabs = {'loadTab':loadTab, 'channelsTab':channelsTab, 'psdTab':psdTab, 'recoveryTab':recoveryTab}
         # For further uses
         # With getTabs() functions I can accesses from different tabs to each others
-        self.tabsRefs = dict()
+        self.tabsRefs = list()
 
         for tabIndex in range(len(self.tabs.values())):
             tabs = list(self.tabs.values())
             tmpTab = tabs[tabIndex](self.top, self)
             #self.tabs[tabIndex] = tmpTab
-            self.tabsRefs[tabs[tabIndex]] = tmpTab
+            self.tabsRefs.append(tmpTab)
             self.top.add(tmpTab, padding=3)
             self.top.tab(tabIndex, text=tmpTab.tabName,compound="left",underline="-1")
         self.top.pack(expand=1, fill="both")
@@ -67,8 +67,9 @@ class generalGUI(tk.Tk):
         # element as str
         matching = False
         foundTab = None
+
         for tab in self.tabsRefs:
-            if element in tab.__dict__
+            if element in tab.__dict__:
                 foundTab = tab
 
         retVal = None
@@ -100,11 +101,6 @@ class generalGUI(tk.Tk):
         style.map('.',background=
             [('selected', _compcolor), ('active',_ana2color)])
         return style
-
-    def getTab(self, tabClass):
-        # Return a reference to the controlled tab
-        # Now, we're in the controller class
-        return self.tabs[tabClass]
 
     def _tkVarsInit(self):
         tkCfg.opFileName = tk.StringVar()
@@ -186,7 +182,7 @@ class loadTab(templateTab, tk.Frame):
         self.loadFileBtn.bind('<Button-1>',lambda e:guiPhaseSupport.loadFile_clicked())
 
         self.chunckLbl = tk.Label(self.loadTopFrame)
-        self.chunckLbl.place(relx=0.543, rely=0.609, height=19, width=36)
+        self.chunckLbl.place(relx=0.543, rely=0.609, height=19, width=50)
         self.chunckLbl.configure(activebackground="#f9f9f9", borderwidth="2", text='''Chunck:''')
 
         self.chunckEntry = tk.Entry(self.loadTopFrame)
@@ -296,12 +292,12 @@ class loadTab(templateTab, tk.Frame):
         self.teAddNoiseCkBtn = tk.Checkbutton(self.loadBottomFrame)
         self.teAddNoiseCkBtn.place(relx=0.015, rely=0.387, relheight=0.045, relwidth=0.134)
         self.teAddNoiseCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='''Add Rand Noise''')
-        self.teAddNoiseCkBtn.configure(variable=tkCfg.ckRands[0])
+        self.teAddNoiseCkBtn.configure(variable=tkCfg.ckRands[1])
 
         self.phAddNoiseCkBtn = tk.Checkbutton(self.loadBottomFrame)
         self.phAddNoiseCkBtn.place(relx=0.02, rely=0.538, relheight=0.045, relwidth=0.124)
         self.phAddNoiseCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='''Add Rand Noise''')
-        self.phAddNoiseCkBtn.configure(variable=tkCfg.ckRands[0])
+        self.phAddNoiseCkBtn.configure(variable=tkCfg.ckRands[2])
 
         self.deNoiseEntry = tk.Entry(self.loadBottomFrame)
         self.deNoiseEntry.place(relx=0.151, rely=0.237,height=21, relwidth=0.147)

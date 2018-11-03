@@ -1,4 +1,5 @@
 # Shared variables
+app = None
 opFileName = None
 loadFileEntry = None
 uploadCheck = None

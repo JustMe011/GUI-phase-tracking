@@ -52,22 +52,40 @@ import time
 
 def loadFile_clicked():
     print("loadFile clicked")
-    tkCfg.uploadCheck.set('Waiting...')
-    loadFileT = tSender(target=loadFile, name='loadFile')
-    loadFileT.start()
-    tkCfg.uploadCheck.set('Done!')
+
+    ## check variables
+    # contDelim
+    # opFileName
+    # contChunk
+    # loMix
+    # downSampling
+    funcArgs = [tkCfg.contDelim, tkCfg.opFileName, tkCfg.contChunck, tkCfg.loMix, tkCfg.downSampling]
+    if _allFilled([tkCfg.contDelim, tkCfg.opFileName, tkCfg.contChunck]):
+        tkCfg.uploadCheck.set('Waiting...')
+        loadFileT = tSender(target=loadFile, name='loadFile')
+        loadFileT.start()
+        tkCfg.uploadCheck.set('Done!')
+    else:
+        print('Error: need other value!')
+    return
 
 def loadSearch_clicked():
-    print("loadSearchBtn pressed")
-
+    guiPhase.generalGUI.changeProperty(tkCfg.app, element='loadSearchBtn', relief=tk.SUNKEN)
     fileSearched = fileDialog.askopenfilename(initialdir=gCfg.ROOT_PATH)
-    fileSearchedP = pathlib.Path(fileSearched).relative_to(gCfg.ROOT_PATH)
-    tkCfg.opFileName.set(fileSearchedP)
-    tkCfg.loadFileEntry.set(fileSearchedP)
-    guiPhase.loadTab.loadSearchBtn.configure(relief=tk.SUNKEN)
+    if fileSearched:
+        fileSearchedP = pathlib.Path(fileSearched).relative_to(gCfg.ROOT_PATH)
+        tkCfg.opFileName.set(fileSearchedP)
+        tkCfg.loadFileEntry.set(fileSearchedP)
 
+    # Need to return "break" in order to release button after been sunken
+    return "break"
 
-
+def _allFilled(vars):
+    allFilled = True
+    for var in vars:
+        if not var.get():
+            allFilled = False
+    return allFilled
 
 ########## THREADED FUNCTIONS ##########
 
@@ -75,8 +93,6 @@ def loadFile():
     print("loadFile func")
     delDecoded = codecs.decode(tkCfg.contDelim.get(), 'unicode_escape') # decoded delimiter sign
     loadedData = npy.array(phSim.loader(tkCfg.opFileName.get(),int(tkCfg.contChunck.get()),delDecoded))
-    print('loadedData')
-    print(loadedData)
 
     if tkCfg.loMix.get():
         loadedData[1:5]=phSim.downconvert(loadedData,float(tkCfg.freqLo.get()))
