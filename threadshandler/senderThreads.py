@@ -11,8 +11,7 @@ class tSender (Thread):
         super(tSender, self).__init__(name=self.threadName, target=target)
         self.daemon = True
 
-        # start gui polling
-        tkCfg.app.receiveDataFromQueue.receiveData()
+
 
         self.func = target
         self.args = args
@@ -28,14 +27,18 @@ class tSender (Thread):
         return
 
     def sendData(self,*tupleToSend):
+        # start gui polling
+
         self._elementToSend = tCfg.templateElement
         self._elementToSend['threadName'] = self.threadName
         self._elementToSend['Value'] = tupleToSend
 
         tCfg.condition.acquire()
         gCfg.sharedQueue.put(self._elementToSend)
+        print('queueSend: {}'.format(gCfg.sharedQueue))
         tCfg.condition.notify()
         tCfg.condition.release()
+        tkCfg.app.receiveDataFromQueue.receiveData()
 
         return
 
