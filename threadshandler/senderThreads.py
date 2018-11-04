@@ -4,21 +4,18 @@ from cfg import generalCfg as gCfg, tkCfg
 
 
 class tSender (Thread):
-    def __init__(self, name=None, target=None, *args, **kwargs):
+    def __init__(self, name=None, target=None, wantQueue=False, *args, **kwargs):
         self.threadName = str()
         self.threadName = name
-
+        self._wantQueue = wantQueue
         super(tSender, self).__init__(name=self.threadName, target=target)
-        self.daemon = True
-
-
-
+        self.daemon = True # Kill thread when main is ended or killed
         self.func = target
         self.args = args
         self.kwargs = kwargs
         return
 
-     # Run override -> I could comment this func and pass the function as target in kwargs
+    # Run override -> Comment this func and pass the function as target in kwargs
     # to the thread.__init__()
 
     def run(self):
@@ -38,8 +35,10 @@ class tSender (Thread):
         print('queueSend: {}'.format(gCfg.sharedQueue))
         tCfg.condition.notify()
         tCfg.condition.release()
-        tkCfg.app.receiveDataFromQueue.receiveData()
-
+        self._activeQueue()
         return
 
-
+    def _activeQueue(self, *args, **kwargs):
+        if self._wantQueue:
+            tkCfg.app.receiveDataFromQueue.receiveData()
+        return

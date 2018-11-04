@@ -102,6 +102,10 @@ def loadFile(*args, **kwargs):
     if tkCfg.downSampling.get():
         loadedData=np.array(phSim.downsampl(loadedData,int(tkCfg.numDown.get())))
 
+    # I dont want to use queue so I just update values into the cfg files
     tkCfg.dataDirLoad = 1
     tkCfg.isSim = 0
-    return loadedData, tkCfg.dataDirLoad, tkCfg.isSim
+    gCfg.loadedData = loadedData
+    return
+
+

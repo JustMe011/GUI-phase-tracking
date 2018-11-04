@@ -8,3 +8,5 @@ sharedQueue = queue.Queue()
 ROOT_PATH = pathlib.Path.cwd()
 IMG_PATH = ROOT_PATH / 'img'
 
+loadedData = None
+
