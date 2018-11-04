@@ -1,4 +1,4 @@
 from threading import Condition
 
-templateElement = {'threadName':'', 'value':[]}
+templateElement = {'threadName':'', 'Value':None}
 condition = Condition()       
