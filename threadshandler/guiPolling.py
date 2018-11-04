@@ -1,12 +1,13 @@
 from threading import Thread, Lock
 import threadshandler.cfg as cfg
-from cfg import generalCfg as gCfg
-from cfg.tkCfg import tkGuiClass
+from cfg import generalCfg as gCfg, tkCfg
+
 
 class guiPolling:
     def __init__(self):
         self._elToReceive = cfg.templateElement
         self._polRunning = False
+        print('guiPolling')
 
     def receiveData(self):
         while self._polRunning:

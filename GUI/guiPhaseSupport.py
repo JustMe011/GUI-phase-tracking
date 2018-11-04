@@ -70,7 +70,7 @@ def loadFile_clicked():
     return
 
 def loadSearch_clicked():
-    #guiPhase.generalGUI.changeProperty(tkCfg.app, element='loadSearchBtn', relief=tk.SUNKEN)
+    guiPhase.generalGUI.changeProperty(tkCfg.app, element='loadSearchBtn', relief=tk.SUNKEN)
     fileSearched = fileDialog.askopenfilename(initialdir=gCfg.ROOT_PATH)
     if fileSearched:
         fileSearchedP = pathlib.Path(fileSearched).relative_to(gCfg.ROOT_PATH)
@@ -92,7 +92,7 @@ def _allFilled(vars):
 def loadFile(*args, **kwargs):
     print("loadFile func")
 
-    '''
+
     delDecoded = codecs.decode(tkCfg.contDelim.get(), 'unicode_escape') # decoded delimiter sign
     loadedData = np.array(phSim.loader(tkCfg.opFileName.get(),int(tkCfg.contChunck.get()),delDecoded))
 
@@ -105,5 +105,3 @@ def loadFile(*args, **kwargs):
     tkCfg.dataDirLoad = 1
     tkCfg.isSim = 0
     return loadedData, tkCfg.dataDirLoad, tkCfg.isSim
-    '''
-    return 2

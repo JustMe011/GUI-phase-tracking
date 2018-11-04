@@ -20,7 +20,7 @@ class generalGUI(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         tk.Tk.wm_title(self, "GUI-phase-tracking")
-        print(tkCfg.tkGuiClass)
+
 
         #self.sharedQueue = queue.Queue()
         self.receiveDataFromQueue = gp.guiPolling()

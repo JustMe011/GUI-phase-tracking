@@ -1,5 +1,5 @@
 # Shared variables
-tkGuiClass = None
+app = None
 opFileName = None
 loadFileEntry = None
 uploadCheck = None

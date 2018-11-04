@@ -15,15 +15,17 @@ try:
     import queue
 except:
     import Queue as queue
-from cfg.tkCfg import tkGuiClass
+from cfg import tkCfg
 
 def main():
     # Starting default thread -> GUI
 
-    tkGuiClass = GUI.generalGUI()
-    tkGuiClass.geometry("1351x706+-3+-8")
+    tkCfg.app = GUI.generalGUI()
+    print('app')
+    print(tkCfg.app)
+    tkCfg.app.geometry("1351x706+-3+-8")
     
-    tkGuiClass.mainloop()
+    tkCfg.app.mainloop()
 
 
 if __name__ == '__main__':
