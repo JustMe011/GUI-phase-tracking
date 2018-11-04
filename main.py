@@ -21,12 +21,8 @@ def main():
     # Starting default thread -> GUI
 
     tkCfg.app = GUI.generalGUI()
-    print('app')
-    print(tkCfg.app)
     tkCfg.app.geometry("1351x706+-3+-8")
-    
     tkCfg.app.mainloop()
-
 
 if __name__ == '__main__':
     main()

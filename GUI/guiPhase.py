@@ -542,8 +542,8 @@ class recoveryTab(templateTab, tk.Frame):
         self.phLbl = tk.Label(self)
         self.phLbl.place(relx=0.237, rely=0.176, height=21, width=19)
         self.phLbl.configure(activebackground="#f9f9f9", text='''Ph''')
-
+'''
 class plotsDraw(Figure):
-    def __init__(self, *args, *kwargs):
-        Figure.__init__(self, *args, *kwargs)
-        
+    def __init__(self, *args, **kwargs):
+        Figure.__init__(self, *args, **kwargs)
+'''

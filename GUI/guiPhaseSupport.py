@@ -64,7 +64,8 @@ def loadFile_clicked():
         tkCfg.uploadCheck.set('Waiting...')
         loadFileT = tSender(name='loadFile', target=loadFile)
         loadFileT.start()
-        tkCfg.uploadCheck.set('Done!')
+        #loadFileT.join()
+
     else:
         print('Error: need other values!')
     return
@@ -106,6 +107,7 @@ def loadFile(*args, **kwargs):
     tkCfg.dataDirLoad = 1
     tkCfg.isSim = 0
     gCfg.loadedData = loadedData
+    tkCfg.uploadCheck.set('Done!')
     return
 
 
