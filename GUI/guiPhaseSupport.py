@@ -12,7 +12,7 @@ from tkinter import filedialog as fileDialog
 import phaseSimulation as phSim
 import GUI.guiPhase as guiPhase
 #from parser_sim import parse_function, parse_x
-import numpy as npy
+import numpy as np
 import codecs
 #import copy
 #import PSD
@@ -62,11 +62,11 @@ def loadFile_clicked():
     funcArgs = [tkCfg.contDelim, tkCfg.opFileName, tkCfg.contChunck, tkCfg.loMix, tkCfg.downSampling]
     if _allFilled([tkCfg.contDelim, tkCfg.opFileName, tkCfg.contChunck]):
         tkCfg.uploadCheck.set('Waiting...')
-        loadFileT = tSender(target=loadFile, name='loadFile')
+        loadFileT = tSender(name='loadFile', target=loadFile)
         loadFileT.start()
         tkCfg.uploadCheck.set('Done!')
     else:
-        print('Error: need other value!')
+        print('Error: need other values!')
     return
 
 def loadSearch_clicked():
@@ -89,18 +89,20 @@ def _allFilled(vars):
 
 ########## THREADED FUNCTIONS ##########
 
-def loadFile():
+def loadFile(*args, **kwargs):
     print("loadFile func")
+
+
     delDecoded = codecs.decode(tkCfg.contDelim.get(), 'unicode_escape') # decoded delimiter sign
-    loadedData = npy.array(phSim.loader(tkCfg.opFileName.get(),int(tkCfg.contChunck.get()),delDecoded))
+    loadedData = np.array(phSim.loader(tkCfg.opFileName.get(),int(tkCfg.contChunck.get()),delDecoded))
 
     if tkCfg.loMix.get():
         loadedData[1:5]=phSim.downconvert(loadedData,float(tkCfg.freqLo.get()))
 
     if tkCfg.downSampling.get():
-        loadedData=npy.array(phSim.downsampl(loadedData,int(tkCfg.numDown.get())))
+        loadedData=np.array(phSim.downsampl(loadedData,int(tkCfg.numDown.get())))
 
     tkCfg.dataDirLoad = 1
     tkCfg.isSim = 0
     return loadedData, tkCfg.dataDirLoad, tkCfg.isSim
-
+    
