@@ -64,8 +64,6 @@ def loadFile_clicked():
         tkCfg.uploadCheck.set('Waiting...')
         loadFileT = tSender(name='loadFile', target=loadFile)
         loadFileT.start()
-        #loadFileT.join()
-
     else:
         print('Error: need other values!')
     return
