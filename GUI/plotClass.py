@@ -24,20 +24,25 @@ class createPlot(object):
         self.plotsName = []
 
     def addPlot(self, funcId, domainList, functionList):
-        if len(domainList) == len(functionList) and funcId:
-            self.plots.append(self.ax.plot(domainList, functionList))
-            self.plotsName.append(funcId)
+        if not funcId in self.plotsName:
+            if len(domainList) == len(functionList) and funcId:
+                self.plots.append(self.ax.plot(domainList, functionList))
+                self.plotsName.append(funcId)
+        else:
+            self.updatePlot(funcId, domainList, functionList)
 
     def showPlot(self, wantBar = True):
         # Create drawing area
-        self.canvas = FigureCanvasTkAgg(self.fig, master = self.masterFrame)
+        if not hasattr(self, 'canvas'):
+            self.canvas = FigureCanvasTkAgg(self.fig, master = self.masterFrame)
 
-        if wantBar:
-            self.toolbar = NavigationToolbar2Tk(self.canvas, self.masterFrame)
-            #self.toolbar = _customToolbar(plotCanvas=self.canvas, frame=self.masterFrame)
-            self.toolbar.update()
-            self.toolbar.pack()
-        self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH)
+            if wantBar:
+                self.toolbar = NavigationToolbar2Tk(self.canvas, self.masterFrame)
+                #self.toolbar = _customToolbar(plotCanvas=self.canvas, frame=self.masterFrame)
+                self.toolbar.update()
+                self.toolbar.pack()
+            self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH)
+
         self.canvas.draw()
 
     def updatePlot (self, funcId, newX, newY):
@@ -45,7 +50,7 @@ class createPlot(object):
         self.plots[currIndex][0].set_xdata(newX)
         self.plots[currIndex][0].set_ydata(newY)
 
-        self.canvas.draw()
+        self.showPlot()
 
 
 

@@ -13,6 +13,7 @@ import pathlib
 from threadshandler import guiPolling as gp
 from cfg import tkCfg, generalCfg
 from matplotlib.figure import Figure
+import GUI.plotClass as plotclass
 
 IMG_PATH = str(pathlib.Path() / 'img') + "/"
 
@@ -292,10 +293,12 @@ class loadTab(templateTab, tk.Frame):
         self.phNoiseEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
         self.phNoiseEntry.configure(textvariable=tkCfg.rands[2])
 
-        self.insEqFrame = tk.Frame(self.loadBottomFrame)
-        self.insEqFrame.place(relx=0.422, rely=0.129, relheight=0.849, relwidth=0.548)
-        self.insEqFrame.configure(relief=tk.GROOVE, borderwidth="2", width=545)
+        self.plotFuncFrame = tk.Frame(self.loadBottomFrame)
+        self.plotFuncFrame.place(relx=0.422, rely=0.129, relheight=0.849, relwidth=0.548)
+        self.plotFuncFrame.configure(relief=tk.GROOVE, borderwidth="2", width=545)
 
+        self.funcPlot = plotclass.createPlot(masterFrame=self.plotFuncFrame, figureSizeListPx=[50, 50])
+        self.funcPlot.showPlot()
 
 
         self.pointNumLbl = tk.Label(self.loadBottomFrame)
@@ -324,7 +327,7 @@ class loadTab(templateTab, tk.Frame):
         self.loadSimBtn = tk.Button(self.loadBottomFrame)
         self.loadSimBtn.place(relx=0.151, rely=0.763, height=34, width=69)
         self.loadSimBtn.configure(activebackground="#d9d9d9", image=self.loadBtnImg)
-        #self.loadSimBtn.bind('<Button-1>',lambda e:guiPhaseSupport.LoadSim_pressed(e))
+        self.loadSimBtn.bind('<Button-1>',lambda e:guiPhaseSupport.on_LoadSim_pressed(e, self.funcPlot))
 
         self.freqDeLbl = tk.Label(self.loadBottomFrame)
         self.freqDeLbl.place(relx=0.302, rely=0.237, height=19, width=104)

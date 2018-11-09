@@ -3,17 +3,12 @@
 
 #import sys
 from tkinter import filedialog as fileDialog
-#import matplotlib
-#matplotlib.use('TkAgg')
-#from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg as FCTkAgg
-#from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk
-#from matplotlib.figure import Figure
-#from matplotlib.pyplot import figure
 import phaseSimulation as phSim
 import GUI.guiPhase as guiPhase
-#from parser_sim import parse_function, parse_x
+import equationParser as eqParse
 import numpy as np
 import codecs
+import GUI.plotClass as plotClass
 #import copy
 #import PSD
 #import datagenerator
@@ -78,6 +73,24 @@ def loadSearch_clicked():
 
     # Need to return "break" in order to release button after been sunken
     return "break"
+
+def on_LoadSim_pressed (event, btnObj):
+    print('ciao')
+    samples = int(tkCfg.pointNum.get())
+    samplingTime = float(tkCfg.funcSamplTime.get())
+    domData = eqParse.parseX(samplingTime, samples)
+    print(domData)
+    eqStr = [i.get() for i in tkCfg.equations]
+
+    funcs = eqParse.parseFuncs(eqStr)
+
+    for i in range(len(funcs)):
+        funcId = 'func-{}'.format(i+1)
+        btnObj.addPlot( funcId, domainList = domData,functionList=funcs[i])
+
+    btnObj.showPlot()
+
+
 
 def _allFilled(vars):
     allFilled = True
