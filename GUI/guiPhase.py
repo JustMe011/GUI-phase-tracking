@@ -124,7 +124,7 @@ class GeneralGUI(tk.Tk):
         tkCfg.downSampling = tk.IntVar(0)
         tkCfg.numDown = tk.StringVar()
         tkCfg.rands = [tk.StringVar() for i in range(3)]
-        tkCfg.ckRands = [tk.StringVar() for i in range(3)]
+        tkCfg.ckRands = [tk.BooleanVar() for i in range(3)]
         tkCfg.ins = [tk.StringVar() for i in range(3)]
 
 
@@ -249,7 +249,7 @@ class LoadTab(TemplateTab, tk.Frame):
 
         self.deAddNoiseCkBtn = tk.Checkbutton(self.loadBottomFrame)
         self.deAddNoiseCkBtn.place(relx=0.02, rely=0.237, relheight=0.045, relwidth=0.124)
-        self.deAddNoiseCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='''Add Rand Noise''')
+        self.deAddNoiseCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='Add Rand Noise')
         self.deAddNoiseCkBtn.configure(variable=tkCfg.ckRands[0])
 
         self.deNoiseEntry = tk.Entry(self.loadBottomFrame)
@@ -264,7 +264,7 @@ class LoadTab(TemplateTab, tk.Frame):
 
         self.teAddNoiseCkBtn = tk.Checkbutton(self.loadBottomFrame)
         self.teAddNoiseCkBtn.place(relx=0.015, rely=0.387, relheight=0.045, relwidth=0.134)
-        self.teAddNoiseCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='''Add Rand Noise''')
+        self.teAddNoiseCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='Add Rand Noise')
         self.teAddNoiseCkBtn.configure(variable=tkCfg.ckRands[1])
 
         self.teNoiseEntry = tk.Entry(self.loadBottomFrame)
@@ -279,7 +279,7 @@ class LoadTab(TemplateTab, tk.Frame):
 
         self.phAddNoiseCkBtn = tk.Checkbutton(self.loadBottomFrame)
         self.phAddNoiseCkBtn.place(relx=0.02, rely=0.538, relheight=0.045, relwidth=0.124)
-        self.phAddNoiseCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='''Add Rand Noise''')
+        self.phAddNoiseCkBtn.configure(activebackground="#d9d9d9", justify=tk.LEFT, text='Add Rand Noise')
         self.phAddNoiseCkBtn.configure(variable=tkCfg.ckRands[2])
 
         self.phNoiseEntry = tk.Entry(self.loadBottomFrame)
@@ -287,12 +287,8 @@ class LoadTab(TemplateTab, tk.Frame):
         self.phNoiseEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
         self.phNoiseEntry.configure(textvariable=tkCfg.rands[2])
 
-        self.plotFuncFrame = tk.Frame(self.loadBottomFrame)
-        self.plotFuncFrame.place(relx=0.422, rely=0.129, relheight=0.849, relwidth=0.548)
-        self.plotFuncFrame.configure(relief=tk.GROOVE, borderwidth="2", width=545)
 
-        self.funcPlot = plotclass.CreatePlot(masterframe=self.plotFuncFrame, figureSizeListPx=[50, 50])
-        self.funcPlot.showPlot()
+
 
         self.pointNumLbl = tk.Label(self.loadBottomFrame)
         self.pointNumLbl.place(relx=0.02, rely=0.667, height=21, width=114)
@@ -337,6 +333,13 @@ class LoadTab(TemplateTab, tk.Frame):
         self.phiPsdBtn.place(relx=0.302, rely=0.882, height=37, width=87)
         self.phiPsdBtn.configure(activebackground="#d9d9d9", text='''PHI PSD''')
         # self.phiPsdBtn.bind('<Button-1>',lambda e:guiPhaseSupport.phipsd_pressed(e))
+
+        self.plotFuncFrame = tk.Frame(self.loadBottomFrame)
+        self.plotFuncFrame.place(relx=0.422, rely=0.129, relheight=0.849, relwidth=0.548)
+        self.plotFuncFrame.configure(relief=tk.GROOVE, borderwidth="2", width=545)
+
+        self.funcPlot = plotclass.CreatePlot(masterframe=self.plotFuncFrame, figureSizeListPx=[50, 50])
+        self.funcPlot.showPlot()
 
 
 class ChannelsTab(TemplateTab, tk.Frame):

@@ -13,7 +13,7 @@ import numpy.random as npr
 # *** fiber model: Jones calculation ***
 
 
-def fibMod(delta, theta, phi):
+def FibMod(delta, theta, phi):
     R1 = np.array([[np.cos(theta), np.sin(theta)], [-np.sin(theta), np.cos(theta)]])
     M = np.array([[np.e ** (1j * (-delta / 2)), 0], [0, np.e**(1j * (delta / 2))]])
     R2 = np.transpose(R1)
@@ -36,7 +36,7 @@ def dataGen(dearr, thearr, phiarr):
         tt = thearr[i]
         pp = phiarr[i]
 
-        Eout = fibMod(dd, tt, pp)
+        Eout = FibMod(dd, tt, pp)
         Exr = Eout[0].real
         Exi = Eout[0].imag
         Eyr = Eout[1].real
@@ -56,15 +56,18 @@ def dataGen(dearr, thearr, phiarr):
 class RandomWalk:
 
     def __init__(self, pow1hz, fs):
-        self.last = 0
-        self.randLis = []
-        self.ampli = np.sqrt(2 * np.pi * np.pi * pow1hz / fs)
-        self.randArr = None
+        self._last = 0
+        self._randLis = []
+        self._ampli = np.sqrt(2 * np.pi * np.pi * pow1hz / fs)
+        self._randElements = None
 
-    def funrand(self, t):
+    def genRandom(self, t):
         for i in range(t):
             step = npr.normal(0, 1)
-            self.last += step  # + (10**(-5))*npr.normal())
-            self.randLis.append(self.last)
-        self.randArr = np.array(self.randLis)
-        self.randArr *= self.ampli
+            self._last += step  # + (10**(-5))*npr.normal())
+            self._randLis.append(self._last)
+        self._randElements = np.array(self._randLis)
+        self._randElements *= self._ampli
+
+    def getRandArray(self):
+        return self._randElements

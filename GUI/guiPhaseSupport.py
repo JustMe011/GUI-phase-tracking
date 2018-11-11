@@ -10,6 +10,7 @@ import numpy as np
 import codecs
 import pathlib
 from threadshandler.senderThreads import TSender
+import dataGen
 
 try:
     import tkinter as tk
@@ -21,27 +22,10 @@ try:
 except ModuleNotFoundError:
     import ttk
 from cfg import tkCfg, generalCfg as gCfg
-# from threadshandler.cfg import condition
-
-
-# Config files:
-
-
-# last_entry_conf = ConfigParser()
-# func_read = []
-# samples = int()
 
 
 def loadFile_clicked():
-    print("loadFile clicked")
-
-    # check variables
-    # contDelim
-    # opFileName
-    # contChunk
-    # loMix
-    # downSampling
-    funcArgs = [tkCfg.contDelim, tkCfg.opFileName, tkCfg.contChunck, tkCfg.loMix, tkCfg.downSampling]
+    # funcArgs = [tkCfg.contDelim, tkCfg.opFileName, tkCfg.contChunck, tkCfg.loMix, tkCfg.downSampling]
     if _allFilled([tkCfg.contDelim, tkCfg.opFileName, tkCfg.contChunck]):
         tkCfg.uploadCheck.set('Waiting...')
         loadFileT = TSender(name='loadFile', target=loadFile)
@@ -64,19 +48,37 @@ def loadSearch_clicked():
 
 
 def on_LoadSim_pressed(event, btnObj):
-    print('ciao')
     samples = int(tkCfg.pointNum.get())
     samplingTime = float(tkCfg.funcSamplTime.get())
-    domData = eqParse.parseX(samplingTime, samples)
+    ckRands = [tkCfg.ckRands[i].get() for i in range(len(tkCfg.ckRands))]
+    rands = [i.get() for i in tkCfg.rands]
     eqStr = [i.get() for i in tkCfg.equations]
-
+    domData = eqParse.parseX(samplingTime, samples)
     funcs = eqParse.parseFuncs(eqStr)
+    if not funcs:
+        # Missing at least one of the three functions
+        print('Missing functions...')
+        return
+
+    for index, ckStatus in enumerate(ckRands):
+        print('Adding Noise')
+        if ckStatus:
+            if not rands[index] or rands[index].isalpha():
+                print('Error: check rand entries...')
+                funcs = None
+                return
+            addingRandom = dataGen.RandomWalk(float(rands[index]), 1/float(samplingTime))
+            addingRandom.genRandom(samples)
+            funcs[index] += addingRandom.getRandArray()
+
+    eqStrName = ['eq_de', 'eq_te', 'eq_ph']
 
     for i in range(len(funcs)):
-        funcId = 'func-{}'.format(i + 1)
-        btnObj.addPlot(funcId, domainList=domData, functionList=funcs[i])
-
+        # funcId = 'func-{}'.format(i + 1)
+        btnObj.addPlot(eqStrName[i], domainList=domData, functionList=funcs[i])
     btnObj.showPlot()
+
+
 
 
 def _allFilled(passedVars):

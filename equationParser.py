@@ -28,17 +28,23 @@ constDict = {
 
 def parseFuncs(eqList):
     # I'll read x arrays from the dictionary
-
+    missingFunction = False
     func = list()
     for equation in eqList:
+        print('Equation: {}'.format(equation))
+        if not equation:
+            missingFunction = True
+            break
         equation = adjustEquation(equation)
         funcToEvaluate = None
         if _isNum(equation):
-            funcToEvaluate = [equation for i in range(len(constDict['x']))]
+            funcToEvaluate = np.array([float(equation) for i in range(len(constDict['x']))])
             func.append(funcToEvaluate)
         else:
             funcToEvaluate = equation
             func.append(ne.evaluate(funcToEvaluate, constDict))
+    if missingFunction:
+        return None
     return func
 
 
