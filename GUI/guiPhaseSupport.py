@@ -1,54 +1,41 @@
 #!/usr/bin/env python
-#-*- CODING:UTF-8 -*-
+# -*- CODING:UTF-8 -*-
 
-#import sys
+# import sys
 from tkinter import filedialog as fileDialog
 import phaseSimulation as phSim
 import GUI.guiPhase as guiPhase
 import equationParser as eqParse
 import numpy as np
 import codecs
-import GUI.plotClass as plotClass
-#import copy
-#import PSD
-#import datagenerator
 import pathlib
-#from configparser import ConfigParser
-#from numpy import asarray as np_asarray
-from threadshandler.senderThreads import tSender
-from threading import Thread
-import time
+from threadshandler.senderThreads import TSender
+
 try:
     import tkinter as tk
-except:
+except ModuleNotFoundError:
     import Tkinter as tk
 
 try:
     import tkinter.ttk as ttk
-except:
+except ModuleNotFoundError:
     import ttk
-#from tkinter import messagebox
-#import threading
 from cfg import tkCfg, generalCfg as gCfg
-from threadshandler.cfg import condition
-import time
+# from threadshandler.cfg import condition
+
 
 # Config files:
-#CONFIG_PATH = pathlib.Path.cwd() / 'configFiles'
-#LAST_ENTRY_NAME = 'last_entry.ini'
-
-#last_entry_conf = ConfigParser()
-#func_read = []
-#samples = int()
 
 
-
+# last_entry_conf = ConfigParser()
+# func_read = []
+# samples = int()
 
 
 def loadFile_clicked():
     print("loadFile clicked")
 
-    ## check variables
+    # check variables
     # contDelim
     # opFileName
     # contChunk
@@ -57,14 +44,15 @@ def loadFile_clicked():
     funcArgs = [tkCfg.contDelim, tkCfg.opFileName, tkCfg.contChunck, tkCfg.loMix, tkCfg.downSampling]
     if _allFilled([tkCfg.contDelim, tkCfg.opFileName, tkCfg.contChunck]):
         tkCfg.uploadCheck.set('Waiting...')
-        loadFileT = tSender(name='loadFile', target=loadFile)
+        loadFileT = TSender(name='loadFile', target=loadFile)
         loadFileT.start()
     else:
         print('Error: need other values!')
     return
 
+
 def loadSearch_clicked():
-    guiPhase.generalGUI.changeProperty(tkCfg.app, element='loadSearchBtn', relief=tk.SUNKEN)
+    guiPhase.GeneralGUI.changeProperty(tkCfg.app, element='loadSearchBtn', relief=tk.SUNKEN)
     fileSearched = fileDialog.askopenfilename(initialdir=gCfg.ROOT_PATH)
     if fileSearched:
         fileSearchedP = pathlib.Path(fileSearched).relative_to(gCfg.ROOT_PATH)
@@ -74,45 +62,44 @@ def loadSearch_clicked():
     # Need to return "break" in order to release button after been sunken
     return "break"
 
-def on_LoadSim_pressed (event, btnObj):
+
+def on_LoadSim_pressed(event, btnObj):
     print('ciao')
     samples = int(tkCfg.pointNum.get())
     samplingTime = float(tkCfg.funcSamplTime.get())
     domData = eqParse.parseX(samplingTime, samples)
-    print(domData)
     eqStr = [i.get() for i in tkCfg.equations]
 
     funcs = eqParse.parseFuncs(eqStr)
 
     for i in range(len(funcs)):
-        funcId = 'func-{}'.format(i+1)
-        btnObj.addPlot( funcId, domainList = domData,functionList=funcs[i])
+        funcId = 'func-{}'.format(i + 1)
+        btnObj.addPlot(funcId, domainList=domData, functionList=funcs[i])
 
     btnObj.showPlot()
 
 
-
-def _allFilled(vars):
+def _allFilled(passedVars):
     allFilled = True
-    for var in vars:
+    for var in passedVars:
         if not var.get():
             allFilled = False
     return allFilled
 
-########## THREADED FUNCTIONS ##########
+
+# ***** THREADED FUNCTIONS *****
 
 def loadFile(*args, **kwargs):
     print("loadFile func")
 
-
-    delDecoded = codecs.decode(tkCfg.contDelim.get(), 'unicode_escape') # decoded delimiter sign
-    loadedData = np.array(phSim.loader(tkCfg.opFileName.get(),int(tkCfg.contChunck.get()),delDecoded))
+    delDecoded = codecs.decode(tkCfg.contDelim.get(), 'unicode_escape')  # decoded delimiter sign
+    loadedData = np.array(phSim.loader(tkCfg.opFileName.get(), int(tkCfg.contChunck.get()), delDecoded))
 
     if tkCfg.loMix.get():
-        loadedData[1:5]=phSim.downconvert(loadedData,float(tkCfg.freqLo.get()))
+        loadedData[1:5] = phSim.downconvert(loadedData, float(tkCfg.freqLo.get()))
 
     if tkCfg.downSampling.get():
-        loadedData=np.array(phSim.downsampl(loadedData,int(tkCfg.numDown.get())))
+        loadedData = np.array(phSim.downsampl(loadedData, int(tkCfg.numDown.get())))
 
     # I dont want to use queue so I just update values into the cfg files
     tkCfg.dataDirLoad = 1
@@ -120,5 +107,3 @@ def loadFile(*args, **kwargs):
     gCfg.loadedData = loadedData
     tkCfg.uploadCheck.set('Done!')
     return
-
-

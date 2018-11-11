@@ -3,16 +3,17 @@ from threading import Thread
 from cfg import generalCfg as gCfg, tkCfg
 
 
-class tSender (Thread):
+class TSender(Thread):
     def __init__(self, name=None, target=None, wantQueue=False, *args, **kwargs):
+        super(TSender, self).__init__(name=name, target=target)
         self.threadName = str()
         self.threadName = name
         self._wantQueue = wantQueue
-        super(tSender, self).__init__(name=self.threadName, target=target)
-        self.daemon = True # Kill thread when main is ended or killed
+        self.daemon = True  # Kill thread when main is ended or killed
         self.func = target
         self.args = args
         self.kwargs = kwargs
+        self._elementToSend = None
         return
 
     # Run override -> Comment this func and pass the function as target in kwargs
@@ -23,7 +24,7 @@ class tSender (Thread):
         self.sendData(returnData)
         return
 
-    def sendData(self,*tupleToSend):
+    def sendData(self, *tupleToSend):
         # start gui polling
 
         self._elementToSend = tCfg.templateElement

@@ -1,58 +1,56 @@
-#import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
+
 import matplotlib
-matplotlib.use('TkAgg')
 import matplotlib.style as mplstyle
+from matplotlib.figure import Figure
+import tkinter as tk
+matplotlib.use('TkAgg')
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 mplstyle.use("bmh")
 
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
-from matplotlib.backend_bases import key_press_handler
-from matplotlib.figure import Figure
-import matplotlib.animation as anim
-import tkinter as tk
 
-
-#Create the figure
-class createPlot(object):
-    def __init__(self, masterFrame, figureSizeListPx, figDpi=100, **kwargs):
+# Create the figure
+class CreatePlot(object):
+    def __init__(self, masterframe, figureSizeListPx, figdpi=100, **kwargs):
         # Create figure and axes...
-        self.dpi = figDpi
+        self.dpi = figdpi
         self.figureSize = self._toTuple(figureSizeListPx)
         self.fig = Figure(figsize=figureSizeListPx, dpi=self.dpi, constrained_layout=False)
-        self.masterFrame = masterFrame
+        self.masterFrame = masterframe
         self.ax = self.fig.add_subplot(111)
         self.plots = []
         self.plotsName = []
+        self.canvas = None
+        self.toolbar = None
 
     def addPlot(self, funcId, domainList, functionList):
-        if not funcId in self.plotsName:
+        if funcId in self.plotsName:
+            self.updatePlot(funcId, domainList, functionList)
+        else:
             if len(domainList) == len(functionList) and funcId:
                 self.plots.append(self.ax.plot(domainList, functionList))
                 self.plotsName.append(funcId)
-        else:
-            self.updatePlot(funcId, domainList, functionList)
 
-    def showPlot(self, wantBar = True):
+    def showPlot(self, wantBar=True):
         # Create drawing area
-        if not hasattr(self, 'canvas'):
-            self.canvas = FigureCanvasTkAgg(self.fig, master = self.masterFrame)
+        if not self.canvas:
+            self.canvas = FigureCanvasTkAgg(self.fig, master=self.masterFrame)
 
             if wantBar:
                 self.toolbar = NavigationToolbar2Tk(self.canvas, self.masterFrame)
-                #self.toolbar = _customToolbar(plotCanvas=self.canvas, frame=self.masterFrame)
+                # self.toolbar = _customToolbar(plotCanvas=self.canvas, frame=self.masterFrame)
                 self.toolbar.update()
                 self.toolbar.pack()
             self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH)
 
         self.canvas.draw()
 
-    def updatePlot (self, funcId, newX, newY):
+    def updatePlot(self, funcId, newX, newY):
         currIndex = self.plotsName.index(funcId)
         self.plots[currIndex][0].set_xdata(newX)
         self.plots[currIndex][0].set_ydata(newY)
 
         self.showPlot()
-
-
 
     def _toTuple(self, figSizePx):
         try:
@@ -70,6 +68,8 @@ class createPlot(object):
             tmp = dim / self.dpi
             inches.append(round(tmp, 2))
         return inches
+
+
 '''
     Future implementations -> create a custom toolbar with custom items
     with custom preferences, bindings, ...

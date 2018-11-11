@@ -1,17 +1,17 @@
-from threading import Thread, Lock
+# from threading import Thread, Lock
 import threadshandler.cfg as cfg
 from cfg import generalCfg as gCfg, tkCfg
 import time
 
-class guiPolling:
+
+class GuiPolling:
     def __init__(self):
         self._elToReceive = cfg.templateElement
         self._polRunning = True
 
-
     def receiveData(self):
-        #print('polRunning: {}'.format(self._polRunning))
-        #print('queue: {}'.format(gCfg.sharedQueue))
+        # print('polRunning: {}'.format(self._polRunning))
+        # print('queue: {}'.format(gCfg.sharedQueue))
         while self._polRunning:
             time.sleep(1)
             if not gCfg.sharedQueue.empty():
@@ -24,6 +24,7 @@ class guiPolling:
                 self._endPolling()
             else:
                 print("empty queue")
-                tkCfg.app.after(100,self.receiveData())
+                tkCfg.app.after(100, self.receiveData())
+
     def _endPolling(self):
         self._polRunning = False
