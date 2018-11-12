@@ -23,7 +23,8 @@ def FibMod(delta, theta, phi):
 # ***** MAIN FUNCTION TO BE IMPORTED *****
 
 
-def dataGen(dearr, thearr, phiarr):
+def dataGen(funcArray):
+   dearr, thearr, phiarr = funcArray
 
     t = []
     rex = []

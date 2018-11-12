@@ -2,7 +2,6 @@
 # -*- CODING:UTF-8 -*-
 
 # import sys
-from tkinter import filedialog as fileDialog
 import phaseSimulation as phSim
 import GUI.guiPhase as guiPhase
 import equationParser as eqParse
@@ -77,8 +76,13 @@ def on_LoadSim_pressed(event, btnObj):
         # funcId = 'func-{}'.format(i + 1)
         btnObj.addPlot(eqStrName[i], domainList=domData, functionList=funcs[i])
     btnObj.showPlot()
+    gCfg.loadedData = list(dataGen.dataGen(funcs))
+    gCfg.loadedData.insert(0, np.zeros(samples))
+    gCfg.loadedData = np.array(gCfg.loadedData)
+    tkCfg.dataDirLoad = 1
+    tkCfg.isSim = 1
 
-
+    # write_last(func_read=func_read,times_read=times_read,samples=samples,rands=pow_list)
 
 
 def _allFilled(passedVars):
