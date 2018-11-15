@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 # -*- CODING:UTF-8 -*-
-
-import tkinter as tk
-import tkinter.ttk as ttk
 import sys
 import GUI.guiPhaseSupport as guiPhaseSupport
+try:
+    import tkinter as tk
+except ModuleNotFoundError:
+    import Tkinter as tk
+    import Tkinter.ttk as ttk
+else:
+    import tkinter.ttk as ttk
+
 
 try:
     import queue
@@ -15,6 +20,7 @@ from threadshandler import guiPolling as gp
 from cfg import tkCfg, generalCfg
 # from matplotlib.figure import Figure
 import GUI.plotClass as plotclass
+
 
 IMG_PATH = str(pathlib.Path() / 'img') + "/"
 
@@ -297,16 +303,16 @@ class LoadTab(TemplateTab, tk.Frame):
         self.pointNumEntry = tk.Entry(self.loadBottomFrame)
         self.pointNumEntry.place(relx=0.141, rely=0.667, height=21, relwidth=0.076)
         self.pointNumEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        self.pointNumEntry.configure(textvariable=tkCfg.pointNum)
+        self.pointNumEntry.configure(textvariable=tkCfg.samples)
 
-        self.timeSampleLbl = tk.Label(self.loadBottomFrame)
-        self.timeSampleLbl.place(relx=0.236, rely=0.667, height=19, width=44)
-        self.timeSampleLbl.configure(activebackground="#f9f9f9", text='''Tsamp''')
+        self.samplTimeLbl = tk.Label(self.loadBottomFrame)
+        self.samplTimeLbl.place(relx=0.236, rely=0.667, height=19, width=44)
+        self.samplTimeLbl.configure(activebackground="#f9f9f9", text='''Tsamp''')
 
-        self.SamplTimeEntry = tk.Entry(self.loadBottomFrame)
-        self.SamplTimeEntry.place(relx=0.281, rely=0.667, height=21, relwidth=0.086)
-        self.SamplTimeEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        self.SamplTimeEntry.configure(textvariable=tkCfg.funcSamplTime)
+        self.samplTimeEntry = tk.Entry(self.loadBottomFrame)
+        self.samplTimeEntry.place(relx=0.281, rely=0.667, height=21, relwidth=0.086)
+        self.samplTimeEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
+        self.samplTimeEntry.configure(textvariable=tkCfg.funcSamplTime)
 
         self.secondsLbl = tk.Label(self.loadBottomFrame)
         self.secondsLbl.place(relx=0.377, rely=0.667, height=19, width=18)

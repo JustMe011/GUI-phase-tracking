@@ -21,6 +21,10 @@ try:
 except ModuleNotFoundError:
     import ttk
 from cfg import tkCfg, generalCfg as gCfg
+try:
+    from tkinter import filedialog
+except ModuleNotFoundError:
+    from Tkinter import filedialog
 
 
 def loadFile_clicked():
@@ -36,7 +40,7 @@ def loadFile_clicked():
 
 def loadSearch_clicked():
     guiPhase.GeneralGUI.changeProperty(tkCfg.app, element='loadSearchBtn', relief=tk.SUNKEN)
-    fileSearched = fileDialog.askopenfilename(initialdir=gCfg.ROOT_PATH)
+    fileSearched = filedialog.askopenfilename(initialdir=gCfg.ROOT_PATH)
     if fileSearched:
         fileSearchedP = pathlib.Path(fileSearched).relative_to(gCfg.ROOT_PATH)
         tkCfg.opFileName.set(fileSearchedP)
