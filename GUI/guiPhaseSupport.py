@@ -4,32 +4,28 @@
 # import sys
 import phaseSimulation as phSim
 import GUI.guiPhase as guiPhase
-import equationParser as eqParse
+import equationparser as eqParse
 import numpy as np
 import codecs
 import pathlib
-from threadshandler.senderThreads import TSender
 import dataGen
+from cfg import tkCfg, generalCfg as gCfg
+from threadshandler.senderThreads import TSender
 
 try:
     import tkinter as tk
 except ModuleNotFoundError:
     import Tkinter as tk
-
-try:
-    import tkinter.ttk as ttk
-except ModuleNotFoundError:
     import ttk
-from cfg import tkCfg, generalCfg as gCfg
-try:
     from tkinter import filedialog
-except ModuleNotFoundError:
-    from Tkinter import filedialog
+else:
+    import tkinter.ttk as ttk
+    from tkinter import filedialog
 
 
 def loadFile_clicked():
     # funcArgs = [tkCfg.contDelim, tkCfg.opFileName, tkCfg.contChunck, tkCfg.loMix, tkCfg.downSampling]
-    if _allFilled([tkCfg.contDelim, tkCfg.opFileName, tkCfg.contChunck]):
+    if _allFilled([tkCfg.contDelim, tkCfg.opFileName, tkCfg.contChunk]):
         tkCfg.uploadCheck.set('Waiting...')
         loadFileT = TSender(name='loadFile', target=loadFile)
         loadFileT.start()
@@ -51,7 +47,7 @@ def loadSearch_clicked():
 
 
 def on_LoadSim_pressed(event, btnObj):
-    samples = int(tkCfg.pointNum.get())
+    samples = int(tkCfg.samples.get())
     samplingTime = float(tkCfg.funcSamplTime.get())
     ckRands = [tkCfg.ckRands[i].get() for i in range(len(tkCfg.ckRands))]
     rands = [i.get() for i in tkCfg.rands]
@@ -64,7 +60,6 @@ def on_LoadSim_pressed(event, btnObj):
         return
 
     for index, ckStatus in enumerate(ckRands):
-        print('Adding Noise')
         if ckStatus:
             if not rands[index] or rands[index].isalpha():
                 print('Error: check rand entries...')
@@ -103,7 +98,7 @@ def loadFile(*args, **kwargs):
     print("loadFile func")
 
     delDecoded = codecs.decode(tkCfg.contDelim.get(), 'unicode_escape')  # decoded delimiter sign
-    loadedData = np.array(phSim.loader(tkCfg.opFileName.get(), int(tkCfg.contChunck.get()), delDecoded))
+    loadedData = np.array(phSim.loader(tkCfg.opFileName.get(), int(tkCfg.contChunk.get()), delDecoded))
 
     if tkCfg.loMix.get():
         loadedData[1:5] = phSim.downconvert(loadedData, float(tkCfg.freqLo.get()))

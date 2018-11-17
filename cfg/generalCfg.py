@@ -8,7 +8,7 @@ sharedQueue = queue.Queue()
 ROOT_PATH = pathlib.Path.cwd()
 IMG_PATH = ROOT_PATH / 'img'
 CONFIG_PATH = ROOT_PATH / 'configFiles'
-LAST_ENTRY_NAME = 'last_entry.ini'
+LAST_ENTRY_NAME = 'lastEntry.ini'
 
 loadedData = None
 

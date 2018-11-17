@@ -31,7 +31,6 @@ def parseFuncs(eqList):
     missingFunction = False
     func = list()
     for equation in eqList:
-        print('Equation: {}'.format(equation))
         if not equation:
             missingFunction = True
             break
@@ -53,7 +52,8 @@ def adjustEquation(eq):
     # Insert a product sign between a number and a variable (ax -> a*x)
     # NB: for the moment it works for ax, but not for xa)
 
-    clean_eq = re.sub(r"((?:\d+)|(?:[a-zA-Z]\w*\(\w+\)))((?:[a-zA-Z]\w*)|\()", r"\1*\2", eq)
+    tmpEq = eq.lower()
+    clean_eq = re.sub(r"((?:\d+)|(?:[a-zA-Z]\w*\(\w+\)))((?:[a-zA-Z]\w*)|\()", r"\1*\2", tmpEq)
 
     return clean_eq
 

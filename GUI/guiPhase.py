@@ -1,28 +1,27 @@
 #!/usr/bin/env python
 # -*- CODING:UTF-8 -*-
 import sys
+
 import GUI.guiPhaseSupport as guiPhaseSupport
+import cfg.generalCfg as gcfg
+import configs.confparser as confparser
+
 try:
     import tkinter as tk
 except ModuleNotFoundError:
     import Tkinter as tk
-    import Tkinter.ttk as ttk
+    import ttk
 else:
     import tkinter.ttk as ttk
-
 
 try:
     import queue
 except ModuleNotFoundError:
     import Queue as queue
-import pathlib
 from threadshandler import guiPolling as gp
-from cfg import tkCfg, generalCfg
+from cfg import tkCfg
 # from matplotlib.figure import Figure
 import GUI.plotClass as plotclass
-
-
-IMG_PATH = str(pathlib.Path() / 'img') + "/"
 
 
 class GeneralGUI(tk.Tk):
@@ -35,7 +34,8 @@ class GeneralGUI(tk.Tk):
 
         self.style = self._setStyle()
         self._tkVarsInit()
-
+        self.lastEntryObj = confparser.LastEntryParser()
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
         # ***** Setting Notebook *****
         self.top = ttk.Notebook(self)
         self.top.pack(side="top", fill="both", expand=True)
@@ -55,6 +55,11 @@ class GeneralGUI(tk.Tk):
             self.top.add(tmpTab, padding=3)
             self.top.tab(tabIndex, text=tmpTab.tabName, compound="left", underline="-1")
         self.top.pack(expand=1, fill="both")
+
+    def on_closing(self):
+        print('Closing...')
+        self.lastEntryObj.writeLastInsert()
+        self.destroy()
 
     def changeProperty(self, element, **propToChange):
         # **propToChange reresent a dictionary containing the property
@@ -112,11 +117,11 @@ class GeneralGUI(tk.Tk):
         tkCfg.opFileName = tk.StringVar()
         tkCfg.loadFileEntry = tk.StringVar()
         tkCfg.uploadCheck = tk.StringVar()
-        tkCfg.contChunck = tk.StringVar()
+        tkCfg.contChunk = tk.StringVar()
         tkCfg.contDelim = tk.StringVar()
         tkCfg.equations = [tk.StringVar() for i in range(3)]
         tkCfg.funcSamplTime = tk.StringVar()
-        tkCfg.pointNum = tk.StringVar()
+        tkCfg.samples = tk.StringVar()
         tkCfg.cutOffFreq = tk.StringVar()
         tkCfg.samplingFreq = tk.StringVar()
         tkCfg.applyFilt = tk.IntVar(0)
@@ -177,14 +182,14 @@ class LoadTab(TemplateTab, tk.Frame):
         self.delimiterEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
         self.delimiterEntry.configure(textvariable=tkCfg.contDelim)
 
-        self.chunckLbl = tk.Label(self.loadTopFrame)
-        self.chunckLbl.place(relx=0.543, rely=0.609, height=19, width=50)
-        self.chunckLbl.configure(activebackground="#f9f9f9", borderwidth="2", text='''Chunck:''')
+        self.chunkLbl = tk.Label(self.loadTopFrame)
+        self.chunkLbl.place(relx=0.543, rely=0.609, height=19, width=50)
+        self.chunkLbl.configure(activebackground="#f9f9f9", borderwidth="2", text='''Chunk:''')
 
-        self.chunckEntry = tk.Entry(self.loadTopFrame)
-        self.chunckEntry.place(relx=0.603, rely=0.609, height=21, relwidth=0.076)
-        self.chunckEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
-        self.chunckEntry.configure(textvariable=tkCfg.contChunck)
+        self.chunkEntry = tk.Entry(self.loadTopFrame)
+        self.chunkEntry.place(relx=0.603, rely=0.609, height=21, relwidth=0.076)
+        self.chunkEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
+        self.chunkEntry.configure(textvariable=tkCfg.contChunk)
 
         self.loMixCkBtn = tk.Checkbutton(self.loadTopFrame)
         self.loMixCkBtn.place(relx=0.754, rely=0.087, relheight=0.183, relwidth=0.068)
@@ -216,7 +221,7 @@ class LoadTab(TemplateTab, tk.Frame):
 
         self.loadFileBtn = tk.Button(self.loadTopFrame)
         self.loadFileBtn.place(relx=0.905, rely=0.261, height=34, width=69)
-        self.loadBtnImg = tk.PhotoImage(file=IMG_PATH + "upload_button.png")
+        self.loadBtnImg = tk.PhotoImage(file=gcfg.IMG_PATH / "upload_button.png")
         self.loadFileBtn.configure(activebackground="#d9d9d9", image=self.loadBtnImg, text='''Button''')
         self.loadFileBtn.bind('<Button-1>', lambda e: guiPhaseSupport.loadFile_clicked())
 
@@ -292,9 +297,6 @@ class LoadTab(TemplateTab, tk.Frame):
         self.phNoiseEntry.place(relx=0.151, rely=0.538, height=21, relwidth=0.147)
         self.phNoiseEntry.configure(background="white", font="TkFixedFont", selectbackground="#c4c4c4")
         self.phNoiseEntry.configure(textvariable=tkCfg.rands[2])
-
-
-
 
         self.pointNumLbl = tk.Label(self.loadBottomFrame)
         self.pointNumLbl.place(relx=0.02, rely=0.667, height=21, width=114)

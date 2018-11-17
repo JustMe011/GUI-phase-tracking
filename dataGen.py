@@ -24,7 +24,7 @@ def FibMod(delta, theta, phi):
 
 
 def dataGen(funcArray):
-   dearr, thearr, phiarr = funcArray
+    dearr, thearr, phiarr = funcArray
 
     t = []
     rex = []
